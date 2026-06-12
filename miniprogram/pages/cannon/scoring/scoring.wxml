@@ -1,0 +1,140 @@
+<!-- pages/cannon/scoring/scoring.wxml -->
+<wxs module="utils" src="./scoring.wxs"></wxs>
+
+<view class="page">
+
+  <!-- 顶部进度条 -->
+  <view class="progress-bar">
+    <view class="progress-fill" style="width: {{progress}}%"></view>
+    <view class="progress-text text-xs text-secondary">
+      {{finishedCount}} / {{totalCount}} 场
+    </view>
+  </view>
+
+  <!-- 场地 Swiper -->
+  <swiper
+    class="court-swiper"
+    current="{{currentCourt}}"
+    bindchange="onCourtChange"
+    indicator-dots="{{true}}"
+    indicator-color="rgba(255,255,255,0.15)"
+    indicator-active-color="#FF5A33"
+  >
+    <swiper-item wx:for="{{matches}}" wx:key="index" wx:if="{{item.teamA.length && item.teamB.length}}">
+      <view class="court-page">
+
+        <!-- 场地编号 + 轮次 -->
+        <view class="court-header">
+          <view class="tag-cannon">第 {{item.round}} 轮 · 场 {{item.court}}</view>
+          <view class="text-sm {{item.status === 'finished' ? 'text-win' : 'text-brand'}}">
+            {{item.status === 'finished' ? '已结束' : item.status === 'playing' ? '进行中' : '待开始'}}
+          </view>
+        </view>
+
+        <!-- 对阵双方 -->
+        <view class="score-area">
+          <!-- A 队 -->
+          <view class="team-panel team-a">
+            <view class="player-names">
+              <view class="player-name" wx:for="{{item.teamA}}" wx:key="*this">
+                {{utils.getMemberName(item, members, players)}}
+              </view>
+            </view>
+            <view class="team-tag">A</view>
+          </view>
+
+          <!-- 比分 -->
+          <view class="score-display">
+            <view class="score-number {{item.winner === 'A' ? 'text-win' : ''}}">{{item.scoreA}}</view>
+            <view class="score-colon">:</view>
+            <view class="score-number {{item.winner === 'B' ? 'text-win' : ''}}">{{item.scoreB}}</view>
+          </view>
+
+          <!-- B 队 -->
+          <view class="team-panel team-b">
+            <view class="team-tag">B</view>
+            <view class="player-names">
+              <view class="player-name" wx:for="{{item.teamB}}" wx:key="*this">
+                {{utils.getMemberName(item, members, players)}}
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 炮击记录 -->
+        <view class="cannon-log" wx:if="{{item.cannonEvents.length}}">
+          <view class="cannon-log-title text-xs text-hint">炮击记录</view>
+          <view class="cannon-log-item text-xs" wx:for="{{item.cannonEvents}}" wx:key="index">
+            {{utils.getMemberName(event, members, players)}} →
+            {{utils.getMemberName(event, members, players)}}
+          </view>
+        </view>
+
+        <!-- 操作区 -->
+        <view class="control-area" wx:if="{{item.status !== 'finished'}}">
+          <!-- 比分调节 -->
+          <view class="score-controls">
+            <button class="ctrl-btn ctrl-minus" bindtap="onMinusA">-1</button>
+            <view class="ctrl-label text-xs text-hint">A队</view>
+            <button class="ctrl-btn ctrl-plus" bindtap="onAddA">+1</button>
+
+            <view class="ctrl-spacer"></view>
+
+            <button class="ctrl-btn ctrl-plus" bindtap="onAddB">+1</button>
+            <view class="ctrl-label text-xs text-hint">B队</view>
+            <button class="ctrl-btn ctrl-minus" bindtap="onMinusB">-1</button>
+          </view>
+
+          <!-- 开炮 + 结束按钮 -->
+          <view class="action-buttons">
+            <button class="btn-cannon flex-1" bindtap="onShowCannon">
+              💥 开炮
+            </button>
+            <button class="btn-finish flex-1" bindtap="onFinishMatch">
+              ✓ 本局结束
+            </button>
+          </view>
+        </view>
+
+        <!-- 已结束标记 -->
+        <view class="finished-badge" wx:if="{{item.status === 'finished'}}">
+          <view class="badge-text text-win text-bold">🏆 {{item.winner === 'A' ? 'A队' : 'B队'}} 获胜</view>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 底部：全部结束 -->
+  <view class="footer-bar">
+    <button class="btn-cannon full-width" bindtap="onFinishAll">
+      🚀 结束全部比赛，查看炮分
+    </button>
+  </view>
+
+  <!-- 开炮面板（弹窗） -->
+  <view class="cannon-overlay" wx:if="{{showCannonPanel}}" bindtap="onCloseCannon">
+    <view class="cannon-panel" catchtap="noop">
+      <view class="cannon-panel-title">💥 选择挨炮对象</view>
+      <view class="cannon-panel-subtitle text-sm text-hint">
+        {{cannonFromMember}} 正在开炮...
+      </view>
+      <view class="cannon-targets">
+        <view
+          class="cannon-target"
+          wx:for="{{_cannonTargets}}"
+          wx:key="*this"
+          data-id="{{item}}"
+          bindtap="onSelectTarget"
+        >
+          <view class="cannon-target-avatar">
+            <image class="avatar-img" src="{{members[utils.findMemberIndex(item, members)].avatarUrl}}" mode="aspectFill" />
+          </view>
+          <view class="text-md mt-8">{{utils.getMemberName({_dummy: true}, members, [item])}}</view>
+          <view class="text-xs text-hint mt-4">点击挨炮</view>
+        </view>
+      </view>
+      <button class="btn-secondary mt-24" bindtap="onCloseCannon">取消</button>
+    </view>
+  </view>
+
+</view>

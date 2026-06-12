@@ -1,0 +1,88 @@
+<!-- pages/cannon/result/result.wxml -->
+<view class="page">
+
+  <!-- MVP Banner -->
+  <view class="mvp-banner">
+    <view class="mvp-crown">👑</view>
+    <image class="mvp-avatar" src="{{mvp.avatar}}" mode="aspectFill" />
+    <view class="mvp-name text-lg text-bold">{{mvp.name}}</view>
+    <view class="mvp-score">
+      <text class="text-brand" style="font-size:56rpx;font-weight:900;">{{mvp.score}}</text>
+      <text class="text-secondary"> 炮分</text>
+    </view>
+    <view class="mvp-title tag-cannon">🏆 本场炮王</view>
+  </view>
+
+  <!-- 炮分变化表 -->
+  <view class="section">
+    <view class="section-title">炮分变化</view>
+    <view class="card" style="padding:0;">
+      <view class="score-table">
+        <view class="table-header">
+          <view class="col-rank">#</view>
+          <view class="col-name">队员</view>
+          <view class="col-score">炮分</view>
+          <view class="col-detail">战绩</view>
+        </view>
+        <view
+          class="table-row"
+          wx:for="{{scoreEntries}}"
+          wx:key="memberId"
+        >
+          <view class="col-rank">
+            <text wx:if="{{item.rank === 1}}">🥇</text>
+            <text wx:elif="{{item.rank === 2}}">🥈</text>
+            <text wx:elif="{{item.rank === 3}}">🥉</text>
+            <text wx:else class="text-hint">{{item.rank}}</text>
+          </view>
+          <view class="col-name flex">
+            <image class="row-avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <view class="ellipsis">{{item.name}}</view>
+          </view>
+          <view class="col-score text-bold {{item.score > 0 ? 'text-brand' : 'text-hint'}}">
+            {{item.score}}
+          </view>
+          <view class="col-detail text-xs text-hint">{{item.change}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 炮击统计 -->
+  <view class="section" wx:if="{{mostCannoned.count > 0 || mostFired.count > 0}}">
+    <view class="section-title">炮击统计</view>
+    <view class="flex">
+      <view class="card flex-1 text-center mr-16" wx:if="{{mostCannoned.count > 0}}">
+        <view class="text-xs text-hint mb-8">🎯 挨炮最多</view>
+        <view class="text-md text-bold">{{mostCannoned.name}}</view>
+        <view class="text-brand text-lg text-bold">×{{mostCannoned.count}}</view>
+      </view>
+      <view class="card flex-1 text-center" wx:if="{{mostFired.count > 0}}">
+        <view class="text-xs text-hint mb-8">💥 开炮最多</view>
+        <view class="text-md text-bold">{{mostFired.name}}</view>
+        <view class="text-brand text-lg text-bold">×{{mostFired.count}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作 -->
+  <view class="footer-bar">
+    <view class="flex mb-16">
+      <button class="btn-secondary flex-1 mr-16" bindtap="onGoBilling">
+        💰 球后算账
+      </button>
+      <button class="btn-cannon flex-1" open-type="share">
+        📤 分享战绩
+      </button>
+    </view>
+    <view class="flex">
+      <button class="btn-secondary flex-1 mr-16" bindtap="onPlayAgain">
+        🔄 再来一局
+      </button>
+      <button class="btn-cannon flex-1" bindtap="onGoHome">
+        🏠 回到首页
+      </button>
+    </view>
+  </view>
+
+</view>

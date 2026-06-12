@@ -1,0 +1,192 @@
+/* ============================================
+   星雨炮分榜 - 全局样式
+   设计令牌：深蓝星夜 + 橙红炮火
+   ============================================ */
+
+/* CSS 变量 —— 设计令牌 */
+page {
+  --color-bg-primary: #0A1628;
+  --color-bg-secondary: #0F1F3D;
+  --color-bg-card: #152240;
+  --color-bg-card-hover: #1A2D52;
+
+  --color-brand: #FF5A33;
+  --color-brand-light: #FF7B5C;
+  --color-brand-dark: #D9441F;
+
+  --color-gold: #FFD700;
+  --color-silver: #C0C0C0;
+  --color-bronze: #CD7F32;
+
+  --color-text-primary: #EAEEF2;
+  --color-text-secondary: #8899AA;
+  --color-text-hint: #556677;
+
+  --color-win: #4CAF50;
+  --color-lose: #FF5252;
+  --color-male: #448AFF;
+  --color-female: #FF4081;
+
+  --radius-sm: 6rpx;
+  --radius-md: 12rpx;
+  --radius-lg: 20rpx;
+
+  --shadow-card: 0 4rpx 20rpx rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20rpx rgba(255, 90, 51, 0.3);
+
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 28rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+/* 重置 */
+view, text, image, scroll-view, swiper, swiper-item,
+button, input, textarea, navigator {
+  box-sizing: border-box;
+}
+
+/* 通用卡片 */
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: 24rpx;
+  margin: 16rpx 24rpx;
+  box-shadow: var(--shadow-card);
+}
+
+/* 炮火按钮 */
+.btn-cannon {
+  background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-dark) 100%);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 20rpx 48rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cannon::after {
+  border: none;
+}
+
+.btn-cannon:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+.btn-cannon[disabled] {
+  background: var(--color-text-hint);
+  color: var(--color-text-secondary);
+}
+
+/* 次要按钮 */
+.btn-secondary {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border: 2rpx solid var(--color-text-hint);
+  border-radius: var(--radius-sm);
+  font-size: 28rpx;
+  padding: 16rpx 40rpx;
+}
+
+.btn-secondary::after {
+  border: none;
+}
+
+/* 通用文本样式 */
+.text-brand { color: var(--color-brand); }
+.text-gold { color: var(--color-gold); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-hint { color: var(--color-text-hint); }
+.text-win { color: var(--color-win); }
+.text-lose { color: var(--color-lose); }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-bold { font-weight: 700; }
+
+.text-xl { font-size: 40rpx; }
+.text-lg { font-size: 34rpx; }
+.text-md { font-size: 28rpx; }
+.text-sm { font-size: 24rpx; }
+.text-xs { font-size: 20rpx; }
+
+/* Flex 布局 */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-1 { flex: 1; }
+.flex-wrap { flex-wrap: wrap; }
+
+/* 间距 */
+.mt-8 { margin-top: 8rpx; }
+.mt-16 { margin-top: 16rpx; }
+.mt-24 { margin-top: 24rpx; }
+.mt-32 { margin-top: 32rpx; }
+.mb-16 { margin-bottom: 16rpx; }
+.mb-24 { margin-bottom: 24rpx; }
+.p-16 { padding: 16rpx; }
+.p-24 { padding: 24rpx; }
+
+/* 截断 */
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 48rpx;
+  color: var(--color-text-hint);
+}
+
+.empty-state .empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.5;
+}
+
+.empty-state .empty-text {
+  font-size: 26rpx;
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* 炮火标签 */
+.tag-cannon {
+  display: inline-block;
+  background: rgba(255, 90, 51, 0.15);
+  color: var(--color-brand);
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+}
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 16rpx 0;
+}
+
+/* 徽章样式 */
+.badge-icon {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}

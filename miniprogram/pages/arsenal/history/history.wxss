@@ -1,0 +1,19 @@
+/* pages/arsenal/history/history.wxss */
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  padding: 24rpx;
+  color: var(--color-text-primary);
+}
+
+.game-list {
+  padding: 0 24rpx;
+}
+
+.game-item:active {
+  background: var(--color-bg-card-hover);
+}
+
+.mr-8 { margin-right: 8rpx; }
+.p-16 { padding: 16rpx; }

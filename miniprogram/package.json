@@ -1,0 +1,14 @@
+{
+  "name": "starcannon-leaderboard",
+  "version": "1.0.0",
+  "description": "星雨炮分榜 - 羽毛球分组积分小程序",
+  "main": "app.js",
+  "scripts": {
+    "compile": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "miniprogram-api-typings": "^3.12.0",
+    "typescript": "^5.3.0"
+  }
+}

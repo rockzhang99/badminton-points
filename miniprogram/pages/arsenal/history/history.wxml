@@ -1,0 +1,35 @@
+<!-- pages/arsenal/history/history.wxml -->
+<view class="page">
+
+  <view class="section-title">📦 历史炮局</view>
+
+  <view class="game-list">
+    <view
+      class="card game-item flex-between"
+      wx:for="{{games}}"
+      wx:key="_id"
+      data-id="{{item._id}}"
+      bindtap="onViewDetail"
+    >
+      <view class="flex-1">
+        <view class="text-md text-bold">{{item.name}}</view>
+        <view class="flex mt-8">
+          <view class="tag-cannon mr-8">{{item.playMode}}</view>
+          <view class="text-xs text-hint">{{item.players.length}}人</view>
+        </view>
+      </view>
+      <view class="flex">
+        <view class="btn-secondary text-xs p-16 mr-8" data-game="{{item}}" catchtap="onReplay">
+          重新开炮
+        </view>
+        <view class="text-brand text-lg">›</view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{games.length === 0 && !loading}}">
+      <view class="empty-icon">📦</view>
+      <view class="empty-text">还没有炮局<br/>快让章一炮开一炮！</view>
+    </view>
+  </view>
+
+</view>

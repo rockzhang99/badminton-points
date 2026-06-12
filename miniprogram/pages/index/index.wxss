@@ -1,0 +1,116 @@
+/* pages/index/index.wxss */
+.hero {
+  padding: 60rpx 48rpx 40rpx;
+  text-align: center;
+  background: linear-gradient(180deg, #FF5A33 0%, #0A1628 100%);
+}
+
+.hero-title {
+  font-size: 52rpx;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 4rpx 12rpx rgba(255, 90, 51, 0.5);
+}
+
+.hero-slogan {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 12rpx;
+  letter-spacing: 4rpx;
+}
+
+.section {
+  margin-top: 32rpx;
+}
+
+.section-header {
+  padding: 0 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  padding: 0 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.section-more {
+  font-size: 24rpx;
+  color: var(--color-brand);
+}
+
+/* 玩法横向滚动 */
+.mode-scroll {
+  white-space: nowrap;
+  padding: 0 8rpx;
+}
+
+.mode-list {
+  display: flex;
+  padding: 8rpx 16rpx;
+}
+
+.mode-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 280rpx;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: 24rpx 16rpx;
+  margin-right: 20rpx;
+  box-shadow: var(--shadow-card);
+  flex-shrink: 0;
+}
+
+.mode-card:active {
+  background: var(--color-bg-card-hover);
+  transform: scale(0.97);
+}
+
+.mode-icon {
+  font-size: 56rpx;
+  margin-bottom: 12rpx;
+}
+
+.mode-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 8rpx;
+}
+
+.mode-desc {
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+  text-align: center;
+  line-height: 1.5;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.mode-count {
+  font-size: 20rpx;
+  color: var(--color-brand);
+  margin-top: 12rpx;
+  background: rgba(255, 90, 51, 0.1);
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+/* 最近比赛 */
+.recent-list {
+  padding: 0 24rpx;
+}
+
+.recent-item {
+  margin-bottom: 12rpx;
+}
+
+.recent-item:active {
+  background: var(--color-bg-card-hover);
+}

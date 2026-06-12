@@ -1,0 +1,61 @@
+<!-- pages/settlement/billing/billing.wxml -->
+<view class="page">
+
+  <view class="section-title">💰 球后算账</view>
+
+  <!-- 费用输入 -->
+  <view class="card">
+    <view class="form-row">
+      <view class="form-label">场地费</view>
+      <input class="form-input-sm" type="digit" value="{{courtFee}}" placeholder="0" bindinput="onCourtFeeInput" />
+      <text class="text-hint ml-8">元</text>
+    </view>
+    <view class="form-row">
+      <view class="form-label">球费</view>
+      <input class="form-input-sm" type="digit" value="{{shuttleFee}}" placeholder="0" bindinput="onShuttleFeeInput" />
+      <text class="text-hint ml-8">元</text>
+    </view>
+    <view class="form-row">
+      <view class="form-label">其它</view>
+      <input class="form-input-sm" type="digit" value="{{otherFee}}" placeholder="0" bindinput="onOtherFeeInput" />
+      <text class="text-hint ml-8">元</text>
+    </view>
+    <button class="btn-cannon full-width mt-24" bindtap="onCalc">🧮 开始分摊</button>
+  </view>
+
+  <!-- 分摊结果 -->
+  <view wx:if="{{result}}">
+    <view class="section-title">
+      分摊结果 · 实收 ¥{{result.totalCollected}} / 总额 ¥{{result.totalBill}}
+    </view>
+
+    <view class="card" style="padding:0;">
+      <view class="billing-row billing-header">
+        <view class="bill-name text-xs text-hint">队员</view>
+        <view class="bill-item text-xs text-hint">场地</view>
+        <view class="bill-item text-xs text-hint">炮分</view>
+        <view class="bill-item text-xs text-hint">应付</view>
+        <view class="bill-item text-xs text-hint">操作</view>
+      </view>
+
+      <view class="billing-row" wx:for="{{memberDetails}}" wx:key="memberId">
+        <view class="bill-name text-md">
+          {{item.name}}
+          <text class="tag-cannon text-xs" wx:if="{{item.exempted}}">免单</text>
+        </view>
+        <view class="bill-item text-sm">¥{{item.courtShare}}</view>
+        <view class="bill-item text-sm">¥{{item.scoreShare}}</view>
+        <view class="bill-item text-brand text-bold text-md">¥{{item.finalAmount}}</view>
+        <view class="bill-item">
+          <text
+            class="text-brand text-xs"
+            wx:if="{{!item.exempted}}"
+            data-id="{{item.memberId}}"
+            bindtap="onExempt"
+          >请客</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

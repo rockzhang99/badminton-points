@@ -1,0 +1,27 @@
+/* pages/mine/badges/badges.wxss */
+
+.section-title { font-size: 28rpx; font-weight: 700; padding: 24rpx; color: var(--color-text-primary); }
+
+.badge-grid { display: flex; flex-wrap: wrap; padding: 0 12rpx; }
+
+.badge-card { width: calc(50% - 24rpx); margin: 12rpx; }
+
+.badge-icon-wrap {
+  width: 100rpx; height: 100rpx; border-radius: 50%; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.badge-icon-wrap.earned {
+  background: linear-gradient(135deg, #FF5A33, #FFD700);
+  box-shadow: 0 0 20rpx rgba(255,90,51,0.3);
+}
+
+.badge-icon-wrap.locked {
+  background: var(--color-bg-secondary); opacity: 0.5;
+}
+
+.badge-emoji { font-size: 48rpx; }
+
+.mt-16 { margin-top: 16rpx; }
+.mt-4 { margin-top: 4rpx; }
+.mt-8 { margin-top: 8rpx; }

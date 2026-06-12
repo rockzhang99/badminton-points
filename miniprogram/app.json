@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/cannon/create/create",
+    "pages/cannon/match/match",
+    "pages/cannon/scoring/scoring",
+    "pages/cannon/result/result",
+    "pages/leaderboard/total/total",
+    "pages/arsenal/history/history",
+    "pages/arsenal/detail/detail",
+    "pages/arsenal/members/members",
+    "pages/settlement/billing/billing",
+    "pages/mine/index/index",
+    "pages/mine/badges/badges"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#0A1628",
+    "navigationBarTitleText": "星雨炮分榜",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0A1628"
+  },
+  "tabBar": {
+    "color": "#8899AA",
+    "selectedColor": "#FF5A33",
+    "backgroundColor": "#0A1628",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "开炮组局",
+        "iconPath": "images/tab-cannon.png",
+        "selectedIconPath": "images/tab-cannon-active.png"
+      },
+      {
+        "pagePath": "pages/leaderboard/total/total",
+        "text": "炮分榜",
+        "iconPath": "images/tab-rank.png",
+        "selectedIconPath": "images/tab-rank-active.png"
+      },
+      {
+        "pagePath": "pages/arsenal/history/history",
+        "text": "炮库",
+        "iconPath": "images/tab-arsenal.png",
+        "selectedIconPath": "images/tab-arsenal-active.png"
+      },
+      {
+        "pagePath": "pages/mine/index/index",
+        "text": "我的",
+        "iconPath": "images/tab-mine.png",
+        "selectedIconPath": "images/tab-mine-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

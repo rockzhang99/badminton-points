@@ -1,0 +1,9 @@
+{
+  "name": "weeklyReset",
+  "version": "1.0.0",
+  "description": "周榜重置定时任务",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

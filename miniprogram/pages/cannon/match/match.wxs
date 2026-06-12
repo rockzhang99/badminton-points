@@ -1,0 +1,15 @@
+// pages/cannon/match/match.wxs
+// WXS 工具函数（渲染层直接调用，避免通信开销）
+
+function getMemberName(memberId, members, playerIds) {
+  for (var i = 0; i < members.length; i++) {
+    if (members[i]._id === memberId) {
+      return members[i].nickname;
+    }
+  }
+  return memberId.substring(0, 6);
+}
+
+module.exports = {
+  getMemberName: getMemberName
+};

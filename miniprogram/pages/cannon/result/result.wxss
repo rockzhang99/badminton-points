@@ -1,0 +1,117 @@
+/* pages/cannon/result/result.wxss */
+
+/* MVP Banner */
+.mvp-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 32rpx 32rpx;
+  background: linear-gradient(180deg, rgba(255, 90, 51, 0.2) 0%, transparent 100%);
+}
+
+.mvp-crown {
+  font-size: 48rpx;
+}
+
+.mvp-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid var(--color-gold);
+  margin: 16rpx 0;
+  background: var(--color-bg-card);
+}
+
+.mvp-name {
+  color: var(--color-text-primary);
+}
+
+.mvp-score {
+  margin: 8rpx 0;
+}
+
+.mvp-title {
+  margin-top: 4rpx;
+}
+
+/* 分数表 */
+.section {
+  margin-top: 32rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  padding: 0 48rpx 16rpx;
+  color: var(--color-text-primary);
+}
+
+.score-table {
+  width: 100%;
+}
+
+.table-header {
+  display: flex;
+  padding: 20rpx 24rpx;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.table-header view {
+  font-size: 22rpx;
+  color: var(--color-text-hint);
+  font-weight: 600;
+}
+
+.table-row {
+  display: flex;
+  padding: 20rpx 24rpx;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.03);
+  align-items: center;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.col-rank {
+  width: 60rpx;
+  text-align: center;
+  font-size: 28rpx;
+}
+
+.col-name {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--color-text-primary);
+}
+
+.col-score {
+  width: 80rpx;
+  text-align: right;
+  font-size: 30rpx;
+}
+
+.col-detail {
+  width: 120rpx;
+  text-align: right;
+}
+
+.row-avatar {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+  background: var(--color-bg-card);
+}
+
+/* 底部按钮 */
+.footer-bar {
+  padding: 32rpx 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.mr-16 { margin-right: 16rpx; }
+.mb-16 { margin-bottom: 16rpx; }
+.mb-8 { margin-bottom: 8rpx; }

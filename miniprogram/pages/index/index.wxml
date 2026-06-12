@@ -1,0 +1,66 @@
+<!-- pages/index/index.wxml -->
+<view class="page">
+
+  <!-- 顶部 Slogan -->
+  <view class="hero">
+    <view class="hero-title">🚀 星雨炮分榜</view>
+    <view class="hero-slogan">{{cannonSlogan}}</view>
+  </view>
+
+  <!-- 玩法选择卡片 -->
+  <view class="section">
+    <view class="section-title">选择炮式玩法</view>
+    <scroll-view scroll-x class="mode-scroll" wx:if="{{playModes.length}}">
+      <view class="mode-list">
+        <view
+          class="mode-card"
+          wx:for="{{playModes}}"
+          wx:key="mode"
+          data-mode="{{item}}"
+          bindtap="onSelectMode"
+        >
+          <view class="mode-icon">{{item.icon}}</view>
+          <view class="mode-name">{{item.name}}</view>
+          <view class="mode-desc">{{item.desc}}</view>
+          <view class="mode-count">{{item.minPlayers}}-{{item.maxPlayers}}人</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 最近比赛 -->
+  <view class="section">
+    <view class="section-header flex-between">
+      <view class="section-title">最近炮局</view>
+      <view class="section-more" bindtap="onViewHistory">查看全部 ›</view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{showEmpty}}">
+      <view class="empty-icon">🎯</view>
+      <view class="empty-text">
+        还没有炮局<br/>快让章一炮开一炮！
+      </view>
+    </view>
+
+    <!-- 最近比赛列表 -->
+    <view class="recent-list" wx:else>
+      <view
+        class="card recent-item flex-between"
+        wx:for="{{recentGames}}"
+        wx:key="_id"
+        data-id="{{item._id}}"
+        bindtap="onReplay"
+      >
+        <view class="flex-1">
+          <view class="text-md text-bold">{{item.name}}</view>
+          <view class="text-sm text-secondary mt-8">
+            {{item.players.length}}人 · {{item.playMode}}
+          </view>
+        </view>
+        <view class="btn-secondary text-sm">重新开炮</view>
+      </view>
+    </view>
+  </view>
+
+</view>

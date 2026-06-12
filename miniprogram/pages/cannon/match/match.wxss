@@ -1,0 +1,110 @@
+/* pages/cannon/match/match.wxss */
+
+.game-header {
+  border-left: 6rpx solid var(--color-brand);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  padding: 24rpx 24rpx 16rpx;
+  color: var(--color-text-primary);
+}
+
+/* 轮次标题 */
+.round-header {
+  padding: 16rpx 24rpx 8rpx;
+}
+
+.round-tag {
+  display: inline-block;
+  font-size: 22rpx;
+  color: var(--color-brand);
+  background: rgba(255, 90, 51, 0.1);
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+/* 对阵卡片 */
+.match-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  margin: 8rpx 24rpx 16rpx;
+  padding: 24rpx;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.court-badge {
+  position: absolute;
+  top: 12rpx;
+  right: 16rpx;
+  font-size: 20rpx;
+  color: var(--color-text-hint);
+}
+
+.team-row {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 0;
+}
+
+.team-label {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  font-weight: 700;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.team-a {
+  background: rgba(68, 138, 255, 0.2);
+  color: var(--color-male);
+}
+
+.team-b {
+  background: rgba(255, 64, 129, 0.2);
+  color: var(--color-female);
+}
+
+.player-chip {
+  background: var(--color-bg-secondary);
+  border-radius: 20rpx;
+  padding: 8rpx 20rpx;
+  font-size: 26rpx;
+  color: var(--color-text-primary);
+  margin-right: 12rpx;
+}
+
+/* VS 分割线 */
+.vs-divider {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 0 8rpx 64rpx;
+}
+
+.vs-line {
+  flex: 1;
+  height: 1rpx;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.vs-text {
+  padding: 0 20rpx;
+  font-size: 22rpx;
+  color: var(--color-text-hint);
+  font-weight: 600;
+}
+
+/* 底部 */
+.footer-bar {
+  padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.mr-16 { margin-right: 16rpx; }

@@ -1,0 +1,61 @@
+<!-- pages/mine/index/index.wxml -->
+<view class="page">
+
+  <!-- 用户头部 -->
+  <view class="user-header" wx:if="{{userInfo}}">
+    <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+    <view class="user-name text-lg text-bold mt-16">{{userInfo.nickName}}</view>
+  </view>
+
+  <view class="user-header" wx:else>
+    <button class="avatar-btn" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">
+      <view class="avatar-placeholder">👤</view>
+    </button>
+    <view class="text-secondary mt-16">点击获取头像和昵称</view>
+  </view>
+
+  <!-- 数据概览 -->
+  <view class="stats-card card">
+    <view class="flex">
+      <view class="stat-item flex-1 text-center">
+        <view class="text-brand text-xl text-bold">{{stats.totalScore}}</view>
+        <view class="text-xs text-hint mt-4">总炮分</view>
+      </view>
+      <view class="stat-item flex-1 text-center">
+        <view class="text-xl text-bold">{{stats.totalGames}}</view>
+        <view class="text-xs text-hint mt-4">总场次</view>
+      </view>
+      <view class="stat-item flex-1 text-center">
+        <view class="text-gold text-xl text-bold">{{stats.cannonKingCount}}</view>
+        <view class="text-xs text-hint mt-4">炮王数</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-item flex-between" bindtap="onGoBadges">
+      <text>🏅 我的徽章</text>
+      <text class="text-hint">›</text>
+    </view>
+    <view class="menu-item flex-between" bindtap="onGoMembers">
+      <text>👥 队员管理</text>
+      <text class="text-hint">›</text>
+    </view>
+    <view class="menu-item flex-between" bindtap="onGoHistory">
+      <text>📦 比赛记录</text>
+      <text class="text-hint">›</text>
+    </view>
+    <view class="menu-item flex-between" bindtap="onGoSettings">
+      <text>⚙️ 设置</text>
+      <text class="text-hint">›</text>
+    </view>
+  </view>
+
+  <!-- 炮灰粉碎 -->
+  <view class="footer-section">
+    <button class="btn-clear" bindtap="onClearData">💣 炮灰粉碎（清除本地数据）</button>
+    <view class="text-xs text-hint text-center mt-16">星雨炮分榜 v1.0 · 章一炮出品</view>
+  </view>
+
+</view>

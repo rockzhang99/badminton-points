@@ -1,0 +1,42 @@
+/* pages/arsenal/detail/detail.wxss */
+
+.detail-header {
+  border-left: 6rpx solid var(--color-brand);
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  padding: 24rpx 24rpx 12rpx;
+}
+
+.detail-score-row {
+  display: flex;
+  align-items: center;
+  padding: 18rpx 24rpx;
+  border-bottom: 1rpx solid rgba(255,255,255,0.04);
+}
+
+.detail-rank { width: 60rpx; text-align: center; font-size: 30rpx; }
+
+.match-detail-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  margin: 8rpx 24rpx 16rpx;
+  padding: 24rpx;
+}
+
+.detail-score {
+  padding: 0 20rpx;
+}
+
+.mx-16 { margin: 0 16rpx; }
+.mb-16 { margin-bottom: 16rpx; }
+.mt-8 { margin-top: 8rpx; }
+
+.footer-bar {
+  padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.full-width { width: 100%; }

@@ -1,0 +1,105 @@
+<!-- pages/cannon/create/create.wxml -->
+<view class="page">
+
+  <!-- 玩法卡片 -->
+  <view class="card play-info">
+    <view class="flex">
+      <view class="mode-icon">{{playModeConfig.icon}}</view>
+      <view class="flex-1 ml-16">
+        <view class="text-lg text-bold">{{playModeConfig.name}}</view>
+        <view class="text-sm text-secondary mt-8">{{playModeConfig.desc}}</view>
+      </view>
+    </view>
+    <view class="text-xs text-hint mt-16">
+      {{playModeConfig.minPlayers}}-{{playModeConfig.maxPlayers}}人
+    </view>
+  </view>
+
+  <!-- 比赛名称 -->
+  <view class="card">
+    <view class="form-label">比赛名称</view>
+    <input
+      class="form-input"
+      value="{{gameName}}"
+      placeholder="输入比赛名称"
+      maxlength="30"
+      bindinput="onNameInput"
+    />
+  </view>
+
+  <!-- 炮重系数 -->
+  <view class="card">
+    <view class="flex-between mb-24">
+      <view class="form-label">炮重系数</view>
+      <view class="text-brand text-lg text-bold">×{{cannonWeight}}</view>
+    </view>
+    <slider
+      min="0"
+      max="3"
+      value="{{cannonWeightIndex}}"
+      step="1"
+      activeColor="#FF5A33"
+      backgroundColor="#1A2D52"
+      block-size="20"
+      bindchange="onCannonWeightChange"
+    />
+    <view class="flex-between mt-8">
+      <text class="text-xs text-hint" wx:for="{{[0.5, 1.0, 1.5, 2.0]}}" wx:key="*this">{{item}}x</text>
+    </view>
+  </view>
+
+  <!-- 队员选择 -->
+  <view class="card">
+    <view class="flex-between mb-24">
+      <view class="form-label">
+        选择队员
+        <text class="text-sm text-hint">
+          （已选 {{selectedMembers.length}}/{{playModeConfig.maxPlayers}}）
+        </text>
+      </view>
+      <view class="btn-secondary text-xs p-16" bindtap="onAddMember">+ 添加</view>
+    </view>
+
+    <view class="member-grid" wx:if="{{members.length}}">
+      <view
+        class="member-item {{selectedMembers.indexOf(item._id) > -1 ? 'selected' : ''}}"
+        wx:for="{{members}}"
+        wx:key="_id"
+        data-id="{{item._id}}"
+        bindtap="onSelectMember"
+      >
+        <image class="member-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <view class="text-xs ellipsis mt-8" style="width:100%;text-align:center;">
+          {{item.nickname}}
+        </view>
+        <view class="member-check" wx:if="{{selectedMembers.indexOf(item._id) > -1}}">✓</view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:else>
+      <view class="empty-text">暂无队员，先去炮库添加吧</view>
+    </view>
+  </view>
+
+  <!-- 炮声反馈开关 -->
+  <view class="card flex-between">
+    <view class="form-label">炮声反馈</view>
+    <switch
+      checked="{{soundEnabled}}"
+      color="#FF5A33"
+      bindchange="onSoundToggle"
+    />
+  </view>
+
+  <!-- 开炮按钮 -->
+  <view class="footer-bar">
+    <button
+      class="btn-cannon btn-fire {{canStart ? '' : 'disabled'}}"
+      bindtap="onFire"
+      disabled="{{!canStart}}"
+    >
+      🚀 开炮组局！
+    </button>
+  </view>
+
+</view>

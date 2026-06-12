@@ -1,0 +1,53 @@
+/* pages/arsenal/members/members.wxss */
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  padding: 24rpx;
+  color: var(--color-text-primary);
+}
+
+.member-list {
+  padding: 0 24rpx;
+}
+
+.member-card:active { background: var(--color-bg-card-hover); }
+
+.member-avatar {
+  width: 80rpx; height: 80rpx; border-radius: 50%;
+  background: var(--color-bg-secondary); flex-shrink: 0;
+}
+
+.text-male { color: var(--color-male); }
+.text-female { color: var(--color-female); }
+
+.mr-8 { margin-right: 8rpx; }
+.ml-16 { margin-left: 16rpx; }
+.mt-4 { margin-top: 4rpx; }
+.mb-24 { margin-bottom: 24rpx; }
+.p-16 { padding: 16rpx; }
+
+.overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7); display: flex; align-items: center;
+  justify-content: center; z-index: 1000;
+}
+
+.add-panel {
+  width: 560rpx; background: var(--color-bg-card);
+  border-radius: var(--radius-lg); padding: 40rpx 32rpx;
+}
+
+.form-input {
+  width: 100%; height: 80rpx; background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm); padding: 0 20rpx; color: var(--color-text-primary);
+  font-size: 28rpx;
+}
+
+.gender-btn {
+  flex: 1; text-align: center; padding: 16rpx; border-radius: var(--radius-sm);
+  margin: 0 8rpx; background: var(--color-bg-secondary); color: var(--color-text-secondary);
+  font-size: 28rpx;
+}
+
+.gender-btn.active { background: var(--color-brand); color: #fff; }

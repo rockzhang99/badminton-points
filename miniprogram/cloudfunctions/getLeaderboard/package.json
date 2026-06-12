@@ -1,0 +1,9 @@
+{
+  "name": "getLeaderboard",
+  "version": "1.0.0",
+  "description": "排行榜聚合查询",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

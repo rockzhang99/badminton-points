@@ -1,0 +1,31 @@
+/* pages/settlement/billing/billing.wxss */
+
+.section-title {
+  font-size: 28rpx; font-weight: 700; padding: 24rpx; color: var(--color-text-primary);
+}
+
+.form-row {
+  display: flex; align-items: center; margin-bottom: 20rpx;
+}
+
+.form-label { width: 120rpx; font-size: 28rpx; color: var(--color-text-primary); }
+
+.form-input-sm {
+  width: 180rpx; height: 64rpx; background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm); padding: 0 16rpx; color: var(--color-text-primary);
+  font-size: 28rpx; text-align: center;
+}
+
+.ml-8 { margin-left: 8rpx; }
+.mt-24 { margin-top: 24rpx; }
+.full-width { width: 100%; }
+
+.billing-row {
+  display: flex; align-items: center; padding: 18rpx 24rpx;
+  border-bottom: 1rpx solid rgba(255,255,255,0.04);
+}
+
+.billing-header { background: rgba(255,255,255,0.02); }
+
+.bill-name { flex: 1; }
+.bill-item { width: 100rpx; text-align: center; }

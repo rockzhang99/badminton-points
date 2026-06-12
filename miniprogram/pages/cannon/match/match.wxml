@@ -1,0 +1,70 @@
+<!-- pages/cannon/match/match.wxml -->
+<wxs module="utils" src="./match.wxs"></wxs>
+
+<view class="page">
+
+  <!-- 比赛信息 -->
+  <view class="card game-header">
+    <view class="text-lg text-bold">{{gameName}}</view>
+    <view class="flex mt-16">
+      <view class="tag-cannon mr-8">炮重 ×{{cannonWeight}}</view>
+      <view class="tag-cannon">{{preview.totalRounds}}轮 {{preview.totalMatches}}场</view>
+    </view>
+  </view>
+
+  <!-- 对阵图（炮位图） -->
+  <view class="section-title">炮位图</view>
+
+  <view class="match-list">
+    <block wx:for="{{matches}}" wx:key="index">
+      <view class="round-header" wx:if="{{index === 0 || item.round !== matches[index-1].round}}">
+        <view class="round-tag">第 {{item.round}} 轮</view>
+      </view>
+
+      <view class="match-card">
+        <view class="court-badge">场{{item.court}}</view>
+
+        <!-- A 队 -->
+        <view class="team-row">
+          <view class="team-label team-a">A</view>
+          <view class="player-chip" wx:for="{{item.teamA}}" wx:for-item="pid" wx:key="*this">
+            {{utils.getMemberName(pid, members, playerIds)}}
+          </view>
+        </view>
+
+        <view class="vs-divider">
+          <view class="vs-line"></view>
+          <view class="vs-text">VS</view>
+          <view class="vs-line"></view>
+        </view>
+
+        <!-- B 队 -->
+        <view class="team-row">
+          <view class="team-label team-b">B</view>
+          <view class="player-chip" wx:for="{{item.teamB}}" wx:for-item="pid" wx:key="*this">
+            {{utils.getMemberName(pid, members, playerIds)}}
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 无对阵（自由炮局） -->
+    <view class="empty-state" wx:if="{{matches.length === 0}}">
+      <view class="empty-icon">🎪</view>
+      <view class="empty-text">自由炮局模式下<br/>进入记分页后可自由添加对阵</view>
+    </view>
+  </view>
+
+  <!-- 操作区 -->
+  <view class="footer-bar">
+    <view class="flex">
+      <button class="btn-secondary flex-1 mr-16" bindtap="onReshuffle">
+        🔄 重新洗牌
+      </button>
+      <button class="btn-cannon flex-1" bindtap="onStartGame">
+        🚀 开始记分
+      </button>
+    </view>
+  </view>
+
+</view>

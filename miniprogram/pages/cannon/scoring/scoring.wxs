@@ -1,0 +1,27 @@
+// pages/cannon/scoring/scoring.wxs
+// WXS 渲染层工具
+
+function getMemberName(match, members, players) {
+  // 需要判断调用方传入的是什么
+  // 如果传了 _dummy，说明是 cannonEvents 场景，item 就是 memberId 字符串
+  if (match._dummy) {
+    var i;
+    for (i = 0; i < members.length; i++) {
+      if (members[i]._id === players[0]) return members[i].nickname;
+    }
+    return players[0] ? players[0].substring(0, 6) : '';
+  }
+  return '';
+}
+
+function findMemberIndex(id, members) {
+  for (var i = 0; i < members.length; i++) {
+    if (members[i]._id === id) return i;
+  }
+  return 0;
+}
+
+module.exports = {
+  getMemberName: getMemberName,
+  findMemberIndex: findMemberIndex
+};

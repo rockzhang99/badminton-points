@@ -1,0 +1,70 @@
+/* pages/leaderboard/total/total.wxss */
+
+.tab-bar {
+  background: var(--color-bg-secondary);
+  padding: 8rpx;
+  margin: 16rpx 24rpx;
+  border-radius: var(--radius-sm);
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 12rpx 8rpx;
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  border-radius: 6rpx;
+  transition: all 0.2s;
+}
+
+.tab-item.active {
+  background: var(--color-brand);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 排行列表 */
+.rank-list {
+  padding: 8rpx 24rpx;
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 16rpx;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  margin-bottom: 12rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.rank-number {
+  width: 60rpx;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rank-medal {
+  font-size: 36rpx;
+}
+
+.rank-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: var(--color-bg-secondary);
+  flex-shrink: 0;
+}
+
+.rank-score {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.ml-16 { margin-left: 16rpx; }
+.mt-4 { margin-top: 4rpx; }
+
+.loading {
+  padding: 200rpx 0;
+  text-align: center;
+}

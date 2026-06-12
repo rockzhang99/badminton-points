@@ -1,0 +1,296 @@
+/* pages/cannon/scoring/scoring.wxss */
+
+/* 进度条 */
+.progress-bar {
+  position: relative;
+  height: 8rpx;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF5A33, #FF7B5C);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  right: 24rpx;
+  top: -36rpx;
+}
+
+/* Swiper */
+.court-swiper {
+  height: calc(100vh - 200rpx);
+}
+
+.court-page {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 场地头部 */
+.court-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 40rpx;
+}
+
+/* 对阵双方 + 比分 */
+.score-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 40rpx;
+}
+
+.team-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-tag {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: 800;
+  margin: 8rpx 0;
+}
+
+.team-a .team-tag {
+  background: rgba(68, 138, 255, 0.2);
+  color: var(--color-male);
+}
+
+.team-b .team-tag {
+  background: rgba(255, 64, 129, 0.2);
+  color: var(--color-female);
+}
+
+.player-names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.player-name {
+  font-size: 28rpx;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* 比分 */
+.score-display {
+  display: flex;
+  align-items: center;
+  padding: 0 32rpx;
+}
+
+.score-number {
+  font-size: 88rpx;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s;
+  width: 120rpx;
+  text-align: center;
+}
+
+.score-colon {
+  font-size: 60rpx;
+  color: var(--color-text-hint);
+  font-weight: 300;
+  margin: 0 8rpx;
+}
+
+/* 炮击记录 */
+.cannon-log {
+  width: 100%;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: 16rpx 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.cannon-log-title {
+  margin-bottom: 8rpx;
+}
+
+.cannon-log-item {
+  color: var(--color-brand);
+  padding: 4rpx 0;
+}
+
+/* 操作区 */
+.control-area {
+  width: 100%;
+}
+
+.score-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+  gap: 8rpx;
+}
+
+.ctrl-btn {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: 700;
+  border: none;
+  padding: 0;
+}
+
+.ctrl-plus {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--color-win);
+}
+
+.ctrl-plus::after { border: none; }
+.ctrl-plus:active { background: rgba(76, 175, 80, 0.35); }
+
+.ctrl-minus {
+  background: rgba(255, 82, 82, 0.15);
+  color: var(--color-lose);
+}
+
+.ctrl-minus::after { border: none; }
+.ctrl-minus:active { background: rgba(255, 82, 82, 0.3); }
+
+.ctrl-label {
+  width: 60rpx;
+  text-align: center;
+}
+
+.ctrl-spacer {
+  width: 40rpx;
+}
+
+/* 开炮 + 结束 */
+.action-buttons {
+  display: flex;
+  gap: 16rpx;
+}
+
+.btn-finish {
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  border: 2rpx solid var(--color-text-hint);
+  border-radius: var(--radius-sm);
+  font-size: 26rpx;
+  font-weight: 600;
+  padding: 20rpx;
+}
+
+.btn-finish::after { border: none; }
+
+/* 已结束 */
+.finished-badge {
+  padding: 40rpx 0;
+}
+
+.badge-text {
+  font-size: 36rpx;
+}
+
+/* 底部 */
+.footer-bar {
+  padding: 16rpx 24rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: var(--color-bg-primary);
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* 开炮弹窗 */
+.cannon-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.cannon-panel {
+  width: 560rpx;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 40rpx 32rpx;
+  box-shadow: var(--shadow-glow);
+}
+
+.cannon-panel-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-brand);
+}
+
+.cannon-panel-subtitle {
+  text-align: center;
+  margin-top: 8rpx;
+}
+
+.cannon-targets {
+  display: flex;
+  justify-content: center;
+  gap: 32rpx;
+  margin-top: 32rpx;
+}
+
+.cannon-target {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+}
+
+.cannon-target:active {
+  background: rgba(255, 90, 51, 0.15);
+  box-shadow: var(--shadow-glow);
+}
+
+.cannon-target-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-bg-card);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+}
+
+.mt-8 { margin-top: 8rpx; }
+.mt-4 { margin-top: 4rpx; }
+.mt-24 { margin-top: 24rpx; }
