@@ -3,7 +3,7 @@
 
   <!-- 顶部 Slogan -->
   <view class="hero">
-    <view class="hero-title">🚀 星雨炮分榜</view>
+    <view class="hero-title">🚀 星羽炮分榜</view>
     <view class="hero-slogan">{{cannonSlogan}}</view>
   </view>
 
@@ -15,7 +15,7 @@
         class="grid-card card-{{index % 6}}"
         wx:for="{{playModes}}"
         wx:key="mode"
-        data-mode="{{item}}"
+        data-mode="{{item.mode}}"
         bindtap="onSelectMode"
       >
         <view class="grid-card-inner">

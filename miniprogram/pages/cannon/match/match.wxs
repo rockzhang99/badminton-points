@@ -10,6 +10,16 @@ function getMemberName(memberId, members, playerIds) {
   return memberId.substring(0, 6);
 }
 
+function getMemberGender(memberId, members) {
+  for (var i = 0; i < members.length; i++) {
+    if (members[i]._id === memberId) {
+      return members[i].gender;
+    }
+  }
+  return 1;
+}
+
 module.exports = {
-  getMemberName: getMemberName
+  getMemberName: getMemberName,
+  getMemberGender: getMemberGender
 };

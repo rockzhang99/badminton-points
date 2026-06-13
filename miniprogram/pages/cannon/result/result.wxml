@@ -22,6 +22,7 @@
           <view class="col-rank">#</view>
           <view class="col-name">队员</view>
           <view class="col-score">炮分</view>
+          <view class="col-net">净胜</view>
           <view class="col-detail">战绩</view>
         </view>
         <view
@@ -38,9 +39,13 @@
           <view class="col-name flex">
             <image class="row-avatar" src="{{item.avatar}}" mode="aspectFill" />
             <view class="ellipsis">{{item.name}}</view>
+            <text class="gender-icon {{item.gender === 2 ? 'gender-f' : ''}}">{{item.gender === 2 ? '♀' : '♂'}}</text>
           </view>
           <view class="col-score text-bold {{item.score > 0 ? 'text-brand' : 'text-hint'}}">
             {{item.score}}
+          </view>
+          <view class="col-net text-bold {{item.netWins > 0 ? 'text-success' : item.netWins < 0 ? 'text-danger' : 'text-hint'}}">
+            {{item.netWins > 0 ? '+' : ''}}{{item.netWins}}
           </view>
           <view class="col-detail text-xs text-hint">{{item.change}}</view>
         </view>

@@ -8,49 +8,112 @@
       <view class="tag-cannon mr-8">{{game.playMode}}</view>
       <view class="tag-cannon">炮重 ×{{game.cannonWeight}}</view>
     </view>
-    <view class="text-xs text-hint mt-8">{{game.players.length}}人 · {{game.matches.length}}场</view>
+    <view class="text-xs text-hint mt-8">{{playerCount}}人 · {{totalMatches}}场</view>
   </view>
 
-  <!-- 炮分排名 -->
-  <view class="section-title">本场炮分</view>
-  <view class="card" style="padding:0;">
-    <view class="detail-score-row" wx:for="{{scoreEntries}}" wx:key="memberId">
-      <view class="detail-rank">
-        <text wx:if="{{item.rank === 1}}">🥇</text>
-        <text wx:elif="{{item.rank === 2}}">🥈</text>
-        <text wx:elif="{{item.rank === 3}}">🥉</text>
-        <text wx:else class="text-hint">{{item.rank}}</text>
-      </view>
-      <view class="flex-1 text-md">{{item.name}}</view>
-      <view class="text-brand text-lg text-bold">{{item.score}}</view>
-    </view>
+  <!-- Tab 栏（说明 / 对阵 / 排名） -->
+  <view class="tab-bar card">
+    <view
+      class="tab-item {{activeTab === 'explain' ? 'tab-active' : ''}}"
+      data-tab="explain"
+      bindtap="onSwitchTab"
+    >说明</view>
+    <view
+      class="tab-item {{activeTab === 'matches' ? 'tab-active' : ''}}"
+      data-tab="matches"
+      bindtap="onSwitchTab"
+    >对阵</view>
+    <view
+      class="tab-item {{activeTab === 'rank' ? 'tab-active' : ''}}"
+      data-tab="rank"
+      bindtap="onSwitchTab"
+    >排名</view>
   </view>
 
-  <!-- 对阵详情 -->
-  <view class="section-title">对阵记录</view>
-  <view class="match-detail-card" wx:for="{{game.matches}}" wx:key="index"
-    wx:if="{{item.status === 'finished'}}">
-    <view class="text-xs text-hint mb-16">第 {{item.round}} 轮 · 场 {{item.court}}</view>
-    <view class="flex-center">
-      <view class="text-md text-center flex-1">
-        <view wx:for="{{item.teamA}}" wx:key="*this">{{item}}</view>
-      </view>
-      <view class="detail-score">
-        <text class="text-xl text-bold {{item.winner === 'A' ? 'text-win' : ''}}">{{item.scoreA}}</text>
-        <text class="text-secondary mx-16">:</text>
-        <text class="text-xl text-bold {{item.winner === 'B' ? 'text-win' : ''}}">{{item.scoreB}}</text>
-      </view>
-      <view class="text-md text-center flex-1">
-        <view wx:for="{{item.teamB}}" wx:key="*this">{{item}}</view>
-      </view>
-    </view>
-    <view class="text-xs text-hint text-center mt-8" wx:if="{{item.cannonEvents.length}}">
-      💥 {{item.cannonEvents.length}}次炮击
-    </view>
-  </view>
+  <!-- ===== 排名 Tab（参照左图）===== -->
+  <block wx:if="{{activeTab === 'rank'}}">
 
-  <view class="footer-bar">
-    <button class="btn-cannon full-width" bindtap="onReplay">🔄 重新开炮</button>
+    <!-- 表头行：参赛选手 | 胜-负 | 净胜分 | 名次 -->
+    <view class="rank-table card">
+      <view class="rank-header">
+        <view class="col-name">参赛选手</view>
+        <view class="col-wl">胜-负</view>
+        <view class="col-net">净胜分</view>
+        <view class="col-rank">名次</view>
+      </view>
+
+      <!-- 数据行 -->
+      <view class="rank-row" wx:for="{{scoreEntries}}" wx:key="memberId">
+        <!-- 名字列 -->
+        <view class="col-name">
+          <view class="name-cell">
+            <image
+              wx:if="{{item.avatar}}"
+              class="name-avatar"
+              src="{{item.avatar}}"
+              mode="aspectFill"
+            />
+            <text>{{item.name}}</text>
+          </view>
+        </view>
+        <!-- 胜-负 -->
+        <view class="col-wl">{{item.wins}}-{{item.losses}}</view>
+        <!-- 净胜分 -->
+        <view class="col-net {{item.netScore >= 0 ? 'net-positive' : 'net-negative'}}">
+          {{item.netScore >= 0 ? '+' : ''}}{{item.netScore}}
+        </view>
+        <!-- 名次 -->
+        <view class="col-rank rank-num {{item.rank <= 3 ? 'rank-top' : ''}}">{{item.rank}}</view>
+      </view>
+    </view>
+
+  </block>
+
+  <!-- ===== 对阵 Tab ===== -->
+  <block wx:if="{{activeTab === 'matches'}}">
+    <view class="match-detail-card" wx:for="{{matchesWithNames}}" wx:key="index">
+      <view class="text-xs text-hint mb-16">第 {{item.round}} 轮 · 场 {{item.court}}</view>
+      <view class="flex-center">
+        <!-- A队名字 -->
+        <view class="text-md text-center flex-1 match-team">
+          <view wx:for="{{item.teamANames}}" wx:key="*this" wx:for-item="aname">{{aname}}</view>
+        </view>
+        <!-- 比分 -->
+        <view class="detail-score">
+          <text class="text-xl text-bold {{item.winner === 'A' ? 'text-win' : ''}}">{{item.scoreA}}</text>
+          <text class="text-secondary mx-16">:</text>
+          <text class="text-xl text-bold {{item.winner === 'B' ? 'text-win' : ''}}">{{item.scoreB}}</text>
+        </view>
+        <!-- B队名字 -->
+        <view class="text-md text-center flex-1 match-team">
+          <view wx:for="{{item.teamBNames}}" wx:key="*this" wx:for-item="bname">{{bname}}</view>
+        </view>
+      </view>
+      <view class="text-xs text-hint text-center mt-8" wx:if="{{item.cannonEvents.length}}">
+        💥 {{item.cannonEvents.length}}次炮击
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 说明 Tab ===== -->
+  <block wx:if="{{activeTab === 'explain'}}">
+    <view class="card explain-card">
+      <view class="explain-title text-bold">📊 计分规则说明</view>
+      <view class="explain-item" wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
+        <view class="explain-dot"></view>
+        <text class="text-sm text-secondary" wx:if="{{item === 1}}">炮分 = 基础分 × 炮重系数 × 胜负系数 - 挨炮惩罚</text>
+        <text class="text-sm text-secondary" wx:if="{{item === 2}}">胜场越多，炮分越高；被炮击越多次，扣分越多</text>
+        <text class="text-sm text-secondary" wx:if="{{item === 3}}">净胜分 = 所有场次（己方得分 - 对方得分）之和</text>
+        <text class="text-sm text-secondary" wx:if="{{item === 4}}">排名按炮分从高到低排序</text>
+        <text class="text-sm text-secondary" wx:if="{{item === 5}}">炮重系数越高，本场得分波动越大</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 底部按钮 -->
+  <view class="footer-bar footer-two-btns">
+    <button class="btn-export" bindtap="onGoHome">🏠 返回首页</button>
+    <button class="btn-replay btn-brand" bindtap="onReplay">🔄 重新开炮</button>
   </view>
 
 </view>

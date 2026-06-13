@@ -8,24 +8,175 @@
   display: flex; align-items: center; margin-bottom: 20rpx;
 }
 
-.form-label { width: 120rpx; font-size: 28rpx; color: var(--color-text-primary); }
+.form-label { width: 140rpx; font-size: 28rpx; color: var(--color-text-primary); flex-shrink: 0; }
+
+/* 球费用行：个数 × 单价 = 金额 */
+.shuttle-row {
+  flex-wrap: wrap;
+}
+
+.shuttle-row .form-label {
+  width: 140rpx;
+}
+
+.input-xs {
+  width: 120rpx; height: 60rpx; background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm); padding: 0 12rpx; color: var(--color-text-primary);
+  font-size: 26rpx; text-align: center;
+  border: 1rpx solid transparent;
+}
+
+.mul-sign, .eq-sign {
+  margin: 0 8rpx; font-size: 26rpx; color: #9CA3AF;
+}
 
 .form-input-sm {
   width: 180rpx; height: 64rpx; background: var(--color-bg-secondary);
   border-radius: var(--radius-sm); padding: 0 16rpx; color: var(--color-text-primary);
   font-size: 28rpx; text-align: center;
+  border: 1rpx solid transparent;
+}
+
+.form-input-sm:focus {
+  border-color: var(--color-brand);
+  background: #fff;
+}
+
+.divider {
+  height: 1rpx; background: var(--color-border); margin: 20rpx 0;
+}
+
+/* 女生优惠区域 */
+.female-section { margin-bottom: 16rpx; }
+.female-section .form-label { width: auto; font-weight: 700; }
+
+.radio-group {
+  display: flex; flex-direction: column; gap: 16rpx; padding-left: 16rpx;
+}
+
+.radio-item {
+  display: flex; align-items: center; font-size: 26rpx; color: var(--color-text-secondary);
+}
+
+.radio-item text { margin-left: 12rpx; }
+
+.radio-circle {
+  width: 36rpx; height: 36rpx; border-radius: 50%; border: 2rpx solid #D1D5DB;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.radio-circle.active {
+  border-color: var(--color-brand);
+}
+
+.radio-dot {
+  width: 20rpx; height: 20rpx; border-radius: 50%; background: var(--color-brand);
+}
+
+.radio-input {
+  width: 100rpx; height: 56rpx; background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm); padding: 0 12rpx; color: var(--color-text-primary);
+  font-size: 26rpx; text-align: center; margin-left: 8rpx;
+  border: 1rpx solid transparent;
+}
+
+.tag-female {
+  display: inline-block; background: rgba(236,72,153,0.1);
+  color: #EC4899; padding: 2rpx 10rpx; border-radius: 8rpx;
+  margin-left: 8rpx; font-size: 22rpx !important;
 }
 
 .ml-8 { margin-left: 8rpx; }
 .mt-24 { margin-top: 24rpx; }
 .full-width { width: 100%; }
 
-.billing-row {
-  display: flex; align-items: center; padding: 18rpx 24rpx;
-  border-bottom: 1rpx solid rgba(255,255,255,0.04);
+/* 分摊汇总卡片（参考图一风格） */
+.summary-card {
+  display: flex; align-items: center;
+  background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
+  border-radius: var(--radius-lg);
+  padding: 32rpx 40rpx;
+  margin: 24rpx;
 }
 
-.billing-header { background: rgba(255,255,255,0.02); }
+.summary-left, .summary-right {
+  flex: 1;
+  text-align: center;
+}
 
-.bill-name { flex: 1; }
-.bill-item { width: 100rpx; text-align: center; }
+.summary-label {
+  display: block; font-size: 22rpx; color: rgba(255,255,255,0.7);
+  margin-bottom: 4rpx;
+}
+.summary-total {
+  display: block; font-size: 44rpx; font-weight: 900; color: #fff;
+}
+.summary-avg {
+  display: block; font-size: 44rpx; font-weight: 900; color: #FDE68A;
+}
+.summary-divider {
+  width: 2rpx; height: 80rpx; background: rgba(255,255,255,0.25); flex-shrink: 0;
+}
+
+/* 结算明细列表 */
+.settle-list {
+  padding: 0 !important;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.settle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+  background: #fff;
+}
+
+.settle-row:last-child { border-bottom: none; }
+
+.settle-info { flex: 1; min-width: 0; }
+.settle-name-row {
+  display: flex; align-items: center; gap: 8rpx;
+}
+.settle-name {
+  font-size: 30rpx; font-weight: 600; color: var(--color-text-primary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gender-icon {
+  font-size: 26rpx; flex-shrink: 0;
+}
+.gender-icon-female { color: #EC4899; }
+.gender-icon-male { color: #3B82F6; }
+.settle-paid {
+  font-size: 24rpx; margin-top: 4rpx; display: block;
+  color: #9CA3AF;
+}
+
+.settle-right {
+  text-align: right; flex-shrink: 0; margin-left: 16rpx;
+}
+.settle-status {
+  display: block; font-size: 22rpx; margin-bottom: 2rpx;
+}
+.status-unpaid { color: #EF4444; }
+.status-exempt { color: #10B981; }
+.settle-amount {
+  display: block; font-size: 34rpx; font-weight: 800;
+}
+
+/* 底部操作 */
+.settle-footer {
+  border-top: 1rpx solid var(--color-bg-secondary);
+  padding: 20rpx 32rpx; text-align: center;
+}
+
+.btn-save {
+  width: 100%; height: 72rpx; line-height: 72rpx;
+  background: var(--color-brand); color: #fff;
+  font-size: 28rpx; font-weight: 600; border-radius: var(--radius-md);
+  border: none;
+}
+
+.save-done {
+  color: var(--color-win); font-size: 26rpx; font-weight: 600;
+}

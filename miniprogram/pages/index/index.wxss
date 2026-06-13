@@ -1,20 +1,22 @@
 /* pages/index/index.wxss */
+
+/* 头部品牌区 */
 .hero {
   padding: 60rpx 48rpx 40rpx;
   text-align: center;
-  background: linear-gradient(180deg, #FF5A33 0%, #0A1628 100%);
+  background: linear-gradient(180deg, rgba(0,117,74,0.06) 0%, var(--color-bg-primary) 100%);
 }
 
 .hero-title {
   font-size: 52rpx;
   font-weight: 800;
-  color: #fff;
-  text-shadow: 0 4rpx 12rpx rgba(255, 90, 51, 0.5);
+  color: var(--color-text-primary);
+  letter-spacing: 2rpx;
 }
 
 .hero-slogan {
   font-size: 28rpx;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-text-secondary);
   margin-top: 12rpx;
   letter-spacing: 4rpx;
 }
@@ -40,9 +42,7 @@
   color: var(--color-brand);
 }
 
-/* ============================================
-   玩法网格 - 彩色卡片（参考羽毛球工具风格）
-   ============================================ */
+/* 玩法网格 - 彩色卡片 */
 .mode-grid {
   display: flex;
   flex-wrap: wrap;
@@ -52,15 +52,15 @@
 
 .grid-card {
   width: calc(50% - 12rpx);
-  border-radius: 20rpx;
+  border-radius: var(--radius-lg);
   margin-bottom: 24rpx;
   overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .grid-card:active {
-  opacity: 0.85;
-  transform: scale(0.97);
+  opacity: 0.92;
+  transform: scale(0.98);
 }
 
 .grid-card-inner {
@@ -72,7 +72,7 @@
 .grid-icon-wrap {
   width: 72rpx;
   height: 72rpx;
-  background: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.3);
   border-radius: 18rpx;
   display: flex;
   align-items: center;
@@ -99,20 +99,20 @@
 
 .grid-sub {
   font-size: 22rpx;
-  color: rgba(255,255,255,0.82);
+  color: rgba(255,255,255,0.85);
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 6 种渐变色 - 每张卡片不同 */
-.card-0 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.card-1 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-.card-2 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-.card-3 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-.card-4 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-.card-5 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+/* 6 种卡片渐变色 */
+.card-0 { background: #00754A; }
+.card-1 { background: #2D8A6E; }
+.card-2 { background: #059669; }
+.card-3 { background: #4A90A4; }
+.card-4 { background: #6B8E6B; }
+.card-5 { background: #3A7D6E; }
 
 /* 最近比赛 */
 .recent-list {

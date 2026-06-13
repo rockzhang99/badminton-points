@@ -38,9 +38,11 @@ Page({
 
   /** 选择玩法，跳转建局页 */
   onSelectMode(e: any) {
-    const mode: PlayModeConfig = e.currentTarget.dataset.mode;
+    const modeKey = e.currentTarget.dataset.mode as PlayMode;
+    const config = PLAY_MODES.find(m => m.mode === modeKey);
+    if (!config) return;
     wx.navigateTo({
-      url: `/pages/cannon/create/create?mode=${mode.mode}`
+      url: `/pages/cannon/create/create?mode=${config.mode}`
     });
   },
 
@@ -60,7 +62,7 @@ Page({
   /** 分享 */
   onShareAppMessage() {
     return {
-      title: '星雨炮分榜 - 一炮组局，炮分上榜',
+      title: '星羽炮分榜 - 一炮组局，炮分上榜',
       path: '/pages/index/index'
     };
   }

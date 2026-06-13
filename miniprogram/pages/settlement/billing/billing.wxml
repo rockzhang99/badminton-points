@@ -10,50 +10,93 @@
       <input class="form-input-sm" type="digit" value="{{courtFee}}" placeholder="0" bindinput="onCourtFeeInput" />
       <text class="text-hint ml-8">元</text>
     </view>
-    <view class="form-row">
-      <view class="form-label">球费</view>
-      <input class="form-input-sm" type="digit" value="{{shuttleFee}}" placeholder="0" bindinput="onShuttleFeeInput" />
-      <text class="text-hint ml-8">元</text>
+    <!-- 球1费用：个数 × 单价 -->
+    <view class="form-row shuttle-row">
+      <view class="form-label">球1费用</view>
+      <input class="input-xs" type="digit" value="{{shuttle1Count}}" placeholder="个数" bindinput="onShuttle1CountInput" />
+      <text class="mul-sign">×</text>
+      <input class="input-xs" type="digit" value="{{shuttle1Price}}" placeholder="单价" bindinput="onShuttle1PriceInput" />
+      <text class="eq-sign">=</text>
+      <text class="text-brand text-bold">{{shuttle1Total || '0.00'}}元</text>
+    </view>
+    <!-- 球2费用：个数 × 单价 -->
+    <view class="form-row shuttle-row">
+      <view class="form-label">球2费用</view>
+      <input class="input-xs" type="digit" value="{{shuttle2Count}}" placeholder="个数" bindinput="onShuttle2CountInput" />
+      <text class="mul-sign">×</text>
+      <input class="input-xs" type="digit" value="{{shuttle2Price}}" placeholder="单价" bindinput="onShuttle2PriceInput" />
+      <text class="eq-sign">=</text>
+      <text class="text-brand text-bold">{{shuttle2Total || '0.00'}}元</text>
     </view>
     <view class="form-row">
       <view class="form-label">其它</view>
       <input class="form-input-sm" type="digit" value="{{otherFee}}" placeholder="0" bindinput="onOtherFeeInput" />
       <text class="text-hint ml-8">元</text>
     </view>
+
+    <!-- 女生优惠选项 -->
+    <view class="divider"></view>
+    <view class="form-row female-section">
+      <view class="form-label">女生优惠</view>
+    </view>
+    <view class="radio-group">
+      <label class="radio-item {{femaleMode === 'deduct' ? 'radio-checked' : ''}}" bindtap="onFemaleModeChange" data-mode="deduct">
+        <view class="radio-circle {{femaleMode === 'deduct' ? 'active' : ''}}">
+          <view wx:if="{{femaleMode === 'deduct'}}" class="radio-dot"></view>
+        </view>
+        <text>女生立减</text>
+        <input class="radio-input" type="digit" value="{{femaleDeductAmount}}" placeholder="0" bindinput="onFemaleDeductInput" />
+        <text class="text-hint">元</text>
+      </label>
+      <label class="radio-item {{femaleMode === 'fixed' ? 'radio-checked' : ''}}" bindtap="onFemaleModeChange" data-mode="fixed">
+        <view class="radio-circle {{femaleMode === 'fixed' ? 'active' : ''}}">
+          <view wx:if="{{femaleMode === 'fixed'}}" class="radio-dot"></view>
+        </view>
+        <text>女生固定球费</text>
+        <input class="radio-input" type="digit" value="{{femaleFixedAmount}}" placeholder="0" bindinput="onFemaleFixedInput" />
+        <text class="text-hint">元</text>
+      </label>
+    </view>
+
     <button class="btn-cannon full-width mt-24" bindtap="onCalc">🧮 开始分摊</button>
   </view>
 
   <!-- 分摊结果 -->
   <view wx:if="{{result}}">
-    <view class="section-title">
-      分摊结果 · 实收 ¥{{result.totalCollected}} / 总额 ¥{{result.totalBill}}
+    <!-- 汇总卡片 -->
+    <view class="summary-card">
+      <view class="summary-left">
+        <text class="summary-label">总费用</text>
+        <text class="summary-total">¥{{result.totalBill}}</text>
+      </view>
+      <view class="summary-divider"></view>
+      <view class="summary-right">
+        <text class="summary-label">人均分摊</text>
+        <text class="summary-avg">¥{{avgPerPerson}}</text>
+      </view>
     </view>
 
-    <view class="card" style="padding:0;">
-      <view class="billing-row billing-header">
-        <view class="bill-name text-xs text-hint">队员</view>
-        <view class="bill-item text-xs text-hint">场地</view>
-        <view class="bill-item text-xs text-hint">炮分</view>
-        <view class="bill-item text-xs text-hint">应付</view>
-        <view class="bill-item text-xs text-hint">操作</view>
+    <!-- 结算明细 -->
+    <view class="section-title">📋 结算明细</view>
+    <view class="card settle-list">
+      <view class="settle-row" wx:for="{{memberDetails}}" wx:key="memberId">
+        <view class="settle-info">
+          <view class="settle-name-row">
+            <text class="settle-name">{{item.name}}</text>
+            <text class="gender-icon {{item.isFemale ? 'gender-icon-female' : 'gender-icon-male'}}">{{item.isFemale ? '♀' : '♂'}}</text>
+          </view>
+          <text class="settle-paid text-hint">已付 ¥{{item.paidAmount || '0.00'}}</text>
+        </view>
+        <view class="settle-right">
+          <text class="settle-status text-xs {{item.exempted || item.finalAmount === 0 ? 'status-exempt' : 'status-unpaid'}}">{{item.exempted || item.finalAmount === 0 ? '免单' : '应付'}}</text>
+          <text class="settle-amount {{item.finalAmount > 0 ? 'text-danger' : 'text-success'}}">¥{{item.finalAmount}}</text>
+        </view>
       </view>
 
-      <view class="billing-row" wx:for="{{memberDetails}}" wx:key="memberId">
-        <view class="bill-name text-md">
-          {{item.name}}
-          <text class="tag-cannon text-xs" wx:if="{{item.exempted}}">免单</text>
-        </view>
-        <view class="bill-item text-sm">¥{{item.courtShare}}</view>
-        <view class="bill-item text-sm">¥{{item.scoreShare}}</view>
-        <view class="bill-item text-brand text-bold text-md">¥{{item.finalAmount}}</view>
-        <view class="bill-item">
-          <text
-            class="text-brand text-xs"
-            wx:if="{{!item.exempted}}"
-            data-id="{{item.memberId}}"
-            bindtap="onExempt"
-          >请客</text>
-        </view>
+      <!-- 底部操作栏 -->
+      <view class="settle-footer">
+        <button class="btn-save" bindtap="onSaveBill" wx:if="{{!billSaved}}">💾 保存到记录</button>
+        <view class="save-done" wx:else>✅ 已保存</view>
       </view>
     </view>
   </view>

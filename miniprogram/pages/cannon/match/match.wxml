@@ -29,6 +29,7 @@
           <view class="team-label team-a">A</view>
           <view class="player-chip" wx:for="{{item.teamA}}" wx:for-item="pid" wx:key="*this">
             {{utils.getMemberName(pid, members, playerIds)}}
+            <text class="gender-icon {{utils.getMemberGender(pid, members) === 2 ? 'gender-f' : ''}}">{{utils.getMemberGender(pid, members) === 2 ? '♀' : '♂'}}</text>
           </view>
         </view>
 
@@ -43,6 +44,7 @@
           <view class="team-label team-b">B</view>
           <view class="player-chip" wx:for="{{item.teamB}}" wx:for-item="pid" wx:key="*this">
             {{utils.getMemberName(pid, members, playerIds)}}
+            <text class="gender-icon {{utils.getMemberGender(pid, members) === 2 ? 'gender-f' : ''}}">{{utils.getMemberGender(pid, members) === 2 ? '♀' : '♂'}}</text>
           </view>
         </view>
       </view>

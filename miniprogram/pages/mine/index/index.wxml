@@ -55,7 +55,7 @@
   <!-- 炮灰粉碎 -->
   <view class="footer-section">
     <button class="btn-clear" bindtap="onClearData">💣 炮灰粉碎（清除本地数据）</button>
-    <view class="text-xs text-hint text-center mt-16">星雨炮分榜 v1.0 · 章一炮出品</view>
+    <view class="text-xs text-hint text-center mt-16">星羽炮分榜 v1.0 · 章一炮出品</view>
   </view>
 
 </view>

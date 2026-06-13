@@ -14,17 +14,17 @@
     "pages/mine/badges/badges"
   ],
   "window": {
-    "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#0A1628",
-    "navigationBarTitleText": "星雨炮分榜",
-    "navigationBarTextStyle": "white",
-    "backgroundColor": "#0A1628"
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "星羽炮分榜",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F8F9FA"
   },
   "tabBar": {
-    "color": "#8899AA",
-    "selectedColor": "#FF5A33",
-    "backgroundColor": "#0A1628",
-    "borderStyle": "black",
+    "color": "#9CA3AF",
+    "selectedColor": "#00754A",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",

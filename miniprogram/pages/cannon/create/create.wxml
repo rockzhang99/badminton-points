@@ -38,8 +38,8 @@
       max="3"
       value="{{cannonWeightIndex}}"
       step="1"
-      activeColor="#FF5A33"
-      backgroundColor="#1A2D52"
+      activeColor="#00754A"
+      backgroundColor="#E5E7EB"
       block-size="20"
       bindchange="onCannonWeightChange"
     />
@@ -67,6 +67,11 @@
           data-index="{{index}}"
           bindinput="onPlayerInput"
         />
+        <view
+          class="gender-btn {{item.gender === 2 ? 'gender-female' : ''}}"
+          data-index="{{index}}"
+          bindtap="onGenderToggle"
+        >{{item.gender === 2 ? '♀' : '♂'}}</view>
         <view class="player-remove" wx:if="{{players.length > playModeConfig.minPlayers}}" data-index="{{index}}" bindtap="onRemovePlayer">×</view>
       </view>
     </view>
@@ -125,7 +130,7 @@
     <view class="form-label">炮声反馈</view>
     <switch
       checked="{{soundEnabled}}"
-      color="#FF5A33"
+      color="#00754A"
       bindchange="onSoundToggle"
     />
   </view>

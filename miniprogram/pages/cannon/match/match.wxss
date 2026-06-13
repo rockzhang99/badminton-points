@@ -1,7 +1,7 @@
 /* pages/cannon/match/match.wxss */
 
 .game-header {
-  border-left: 6rpx solid var(--color-brand);
+  border-left: 4rpx solid var(--color-brand);
 }
 
 .section-title {
@@ -20,9 +20,10 @@
   display: inline-block;
   font-size: 22rpx;
   color: var(--color-brand);
-  background: rgba(255, 90, 51, 0.1);
+  background: rgba(0, 117, 74, 0.08);
   padding: 4rpx 16rpx;
   border-radius: 20rpx;
+  font-weight: 600;
 }
 
 /* 对阵卡片 */
@@ -31,15 +32,15 @@
   border-radius: var(--radius-md);
   margin: 8rpx 24rpx 16rpx;
   padding: 24rpx;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-sm);
   position: relative;
 }
 
 .court-badge {
   position: absolute;
-  top: 12rpx;
-  right: 16rpx;
-  font-size: 20rpx;
+  top: 16rpx;
+  right: 20rpx;
+  font-size: 22rpx;
   color: var(--color-text-hint);
 }
 
@@ -63,12 +64,12 @@
 }
 
 .team-a {
-  background: rgba(68, 138, 255, 0.2);
+  background: rgba(59, 130, 246, 0.1);
   color: var(--color-male);
 }
 
 .team-b {
-  background: rgba(255, 64, 129, 0.2);
+  background: rgba(236, 72, 153, 0.1);
   color: var(--color-female);
 }
 
@@ -79,6 +80,19 @@
   font-size: 26rpx;
   color: var(--color-text-primary);
   margin-right: 12rpx;
+  display: flex;
+  align-items: center;
+}
+
+/* 性别图标 */
+.gender-icon {
+  font-size: 22rpx;
+  margin-left: 6rpx;
+  color: var(--color-male);
+}
+
+.gender-f {
+  color: var(--color-female);
 }
 
 /* VS 分割线 */
@@ -91,7 +105,7 @@
 .vs-line {
   flex: 1;
   height: 1rpx;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-border);
 }
 
 .vs-text {

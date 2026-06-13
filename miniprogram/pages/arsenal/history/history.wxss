@@ -11,6 +11,14 @@
   padding: 0 24rpx;
 }
 
+.game-item {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  margin-bottom: 12rpx;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
 .game-item:active {
   background: var(--color-bg-card-hover);
 }

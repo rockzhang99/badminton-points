@@ -75,7 +75,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '谁是真炮王？来星雨炮分榜一决高下！',
+      title: '谁是真炮王？来星羽炮分榜一决高下！',
       path: '/pages/leaderboard/total/total'
     };
   }

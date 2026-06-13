@@ -3,13 +3,13 @@
 /* 进度条 */
 .progress-bar {
   position: relative;
-  height: 8rpx;
-  background: rgba(255, 255, 255, 0.06);
+  height: 6rpx;
+  background: var(--color-bg-secondary);
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #FF5A33, #FF7B5C);
+  background: var(--color-brand);
   transition: width 0.3s ease;
 }
 
@@ -40,14 +40,16 @@
   margin-bottom: 32rpx;
 }
 
-/* ===== 对阵信息卡（参照左图）===== */
+/* 对阵信息卡 */
 .match-info-card {
   width: 100%;
   background: var(--color-bg-card);
   border-radius: var(--radius-md);
   padding: 28rpx 24rpx;
   margin-bottom: 24rpx;
+  box-shadow: var(--shadow-sm);
   position: relative;
+  border: 1rpx solid var(--color-border);
 }
 
 .pos-row {
@@ -70,7 +72,7 @@
 .pos-tag {
   font-size: 24rpx;
   color: var(--color-text-hint);
-  background: rgba(255,255,255,0.06);
+  background: var(--color-bg-secondary);
   padding: 4rpx 14rpx;
   border-radius: 8rpx;
   margin-right: 12rpx;
@@ -89,6 +91,24 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 160rpx;
+}
+
+/* 名字+性别图标容器 */
+.pos-name-wrap {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.gender-icon {
+  font-size: 22rpx;
+  margin-left: 4rpx;
+  flex-shrink: 0;
+  color: var(--color-male);
+}
+
+.gender-f {
+  color: var(--color-female);
 }
 
 .pos-score-sm {
@@ -129,27 +149,29 @@
   position: absolute;
   right: 16rpx;
   bottom: 16rpx;
-  background: linear-gradient(135deg, #f093fb, #f5576c);
+  background: var(--color-brand);
   color: #fff;
   font-size: 22rpx;
   font-weight: 600;
-  padding: 10rpx 18rpx;
+  padding: 8rpx 18rpx;
   border-radius: 20rpx;
   line-height: 1.2;
   text-align: center;
 }
 
 .serve-right {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: var(--color-male);
 }
 
-/* ===== 计分板（大号比分 + ±按钮）===== */
+/* 计分板 */
 .scoreboard-card {
   width: 100%;
   background: var(--color-bg-card);
   border-radius: var(--radius-md);
   padding: 28rpx 24rpx;
   margin-bottom: 20rpx;
+  box-shadow: var(--shadow-sm);
+  border: 1rpx solid var(--color-border);
 }
 
 .big-scores {
@@ -180,7 +202,7 @@
   display: flex;
   justify-content: space-around;
   padding-top: 16rpx;
-  border-top: 1rpx solid rgba(255,255,255,0.06);
+  border-top: 1rpx solid var(--color-border);
 }
 
 .pm-btn {
@@ -200,19 +222,19 @@
 .pm-btn::after { border: none; }
 
 .pm-plus {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: var(--color-brand);
   color: #fff;
 }
 
 .pm-minus {
-  background: rgba(255,255,255,0.08);
+  background: var(--color-bg-secondary);
   color: var(--color-text-secondary);
 }
 
-.pm-plus:active { opacity: 0.7; }
-.pm-minus:active { background: rgba(255,82,82,0.25); }
+.pm-plus:active { opacity: 0.75; }
+.pm-minus:active { background: rgba(239, 68, 68, 0.12); }
 
-/* ===== 快速比分 ===== */
+/* 快速比分 */
 .quick-section {
   width: 100%;
   margin-bottom: 20rpx;
@@ -227,28 +249,32 @@
 
 .quick-btns {
   display: flex;
-  gap: 20rpx;
+  gap: 16rpx;
 }
 
 .quick-btn {
   flex: 1;
-  height: 72rpx;
-  line-height: 72rpx;
+  height: 68rpx;
+  line-height: 68rpx;
   text-align: center;
   border-radius: var(--radius-sm);
-  font-size: 28rpx;
+  font-size: 26rpx;
   font-weight: 600;
   background: var(--color-bg-card);
   color: var(--color-text-primary);
-  border: none;
+  border: 1rpx solid var(--color-border);
   padding: 0;
   margin: 0;
 }
 
 .quick-btn::after { border: none; }
-.quick-btn:active { opacity: 0.6; }
+.quick-btn:active {
+  background: var(--color-bg-card-hover);
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
 
-/* ===== 操作按钮行 ===== */
+/* 操作按钮行 */
 .action-row {
   width: 100%;
   display: flex;
@@ -257,7 +283,6 @@
 }
 
 .action-btn {
-  flex: 1;
   height: 76rpx;
   line-height: 76rpx;
   text-align: center;
@@ -275,39 +300,39 @@
 .action-btn::after { border: none; }
 
 .action-reset {
-  background: rgba(255,255,255,0.08);
+  width: 180rpx;
+  background: var(--color-bg-card);
   color: var(--color-text-secondary);
-}
-
-.action-save {
-  background: linear-gradient(135deg, #f093fb, #f5576c);
-  color: #fff;
+  border: 1rpx solid var(--color-border);
 }
 
 .action-next {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  flex: 1;
+  background: var(--color-male);
   color: #fff;
 }
 
+.action-reset:active { background: var(--color-bg-card-hover); }
+.action-save:active { background: var(--color-brand-dark); }
+.action-next:active { opacity: 0.8; }
+
 .mt-24 { margin-top: 24rpx; }
 
-/* ===== 开炮/结束按钮行 ===== */
+/* 开炮按钮行 */
 .cannon-btn-row {
   width: 100%;
-  display: flex;
-  gap: 16rpx;
   margin-top: 8rpx;
 }
 
 .btn-cannon-full {
-  flex: 1.5;
+  width: 100%;
   height: 76rpx;
   line-height: 76rpx;
   border-radius: var(--radius-sm);
   font-size: 28rpx;
   font-weight: 600;
   color: #fff;
-  background: linear-gradient(135deg, #FF5A33, #FF7B5C);
+  background: var(--color-brand);
   border: none;
   padding: 0;
   margin: 0;
@@ -317,25 +342,7 @@
 }
 
 .btn-cannon-full::after { border: none; }
-
-.btn-finish-match {
-  flex: 1;
-  height: 76rpx;
-  line-height: 76rpx;
-  border-radius: var(--radius-sm);
-  font-size: 26rpx;
-  font-weight: 600;
-  background: var(--color-bg-card);
-  color: var(--color-text-primary);
-  border: 2rpx solid rgba(255,255,255,0.1);
-  padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-finish-match::after { border: none; }
+.btn-cannon-full:active { background: var(--color-brand-dark); }
 
 /* 炮击记录 */
 .cannon-log {
@@ -344,10 +351,14 @@
   border-radius: var(--radius-md);
   padding: 16rpx 24rpx;
   margin-bottom: 24rpx;
+  box-shadow: var(--shadow-sm);
+  border: 1rpx solid var(--color-border);
 }
 
 .cannon-log-title {
   margin-bottom: 8rpx;
+  color: var(--color-text-primary);
+  font-weight: 600;
 }
 
 .cannon-log-item {
@@ -384,7 +395,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -396,7 +407,7 @@
   background: var(--color-bg-card);
   border-radius: var(--radius-lg);
   padding: 40rpx 32rpx;
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-lg);
 }
 
 .cannon-panel-title {
@@ -409,6 +420,7 @@
 .cannon-panel-subtitle {
   text-align: center;
   margin-top: 8rpx;
+  color: var(--color-text-secondary);
 }
 
 .cannon-targets {
@@ -428,8 +440,8 @@
 }
 
 .cannon-target:active {
-  background: rgba(255, 90, 51, 0.15);
-  box-shadow: var(--shadow-glow);
+  background: rgba(0, 117, 74, 0.08);
+  box-shadow: 0 0 0 2rpx var(--color-brand);
 }
 
 .cannon-target-avatar {

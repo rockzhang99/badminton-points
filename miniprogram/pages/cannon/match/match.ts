@@ -6,6 +6,7 @@ import { generateMatches, getMatchPreview } from '../../../utils/match-engine';
 interface TempPlayer {
   id: string;
   nickname: string;
+  gender?: number;
 }
 
 Page({
@@ -40,10 +41,11 @@ Page({
 
     playerIds = players.map(p => p.id);
 
-    // 将临时选手数据转为兼容 members 格式 {_id, nickname}
+    // 将临时选手数据转为兼容 members 格式 {_id, nickname, gender}
     const members = players.map(p => ({
       _id: p.id,
       nickname: p.nickname,
+      gender: p.gender || 1,
       avatarUrl: ''
     }));
 

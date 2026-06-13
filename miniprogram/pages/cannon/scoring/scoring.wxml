@@ -17,8 +17,8 @@
     current="{{currentCourt}}"
     bindchange="onCourtChange"
     indicator-dots="{{true}}"
-    indicator-color="rgba(255,255,255,0.15)"
-    indicator-active-color="#FF5A33"
+    indicator-color="rgba(0,0,0,0.1)"
+    indicator-active-color="#00754A"
   >
     <swiper-item wx:for="{{matches}}" wx:key="index" wx:if="{{item.teamA.length && item.teamB.length}}">
       <view class="court-page">
@@ -33,20 +33,26 @@
 
         <!-- ===== 对阵信息卡（参照左图）===== -->
         <view class="match-info-card">
-          <!-- 上排：选手位置 -->
-          <view class="pos-row">
-            <view class="pos-side">
-              <text class="pos-tag">左</text>
-              <text class="pos-score-sm">{{item.scoreA}}</text>
+        <!-- 上排：选手位置 -->
+        <view class="pos-row">
+          <view class="pos-side">
+            <text class="pos-tag">左</text>
+            <text class="pos-score-sm">{{item.scoreA}}</text>
+            <view class="pos-name-wrap">
               <text class="pos-name">{{teamAName0}}</text>
-            </view>
-            <view class="vs-badge">VS</view>
-            <view class="pos-side pos-right">
-              <text class="pos-name">{{teamBName0}}</text>
-              <text class="pos-score-sm">{{item.scoreB}}</text>
-              <text class="pos-tag">右</text>
+              <text class="gender-icon {{teamAGender0 === 2 ? 'gender-f' : ''}}">{{teamAGender0 === 2 ? '♀' : '♂'}}</text>
             </view>
           </view>
+          <view class="vs-badge">VS</view>
+          <view class="pos-side pos-right">
+            <view class="pos-name-wrap">
+              <text class="pos-name">{{teamBName0}}</text>
+              <text class="gender-icon {{teamBGender0 === 2 ? 'gender-f' : ''}}">{{teamBGender0 === 2 ? '♀' : '♂'}}</text>
+            </view>
+            <text class="pos-score-sm">{{item.scoreB}}</text>
+            <text class="pos-tag">右</text>
+          </view>
+        </view>
 
           <!-- 交换箭头行 -->
           <view class="swap-row">
@@ -55,20 +61,26 @@
             <view class="swap-arrow">⇅</view>
           </view>
 
-          <!-- 下排：第二位选手位置（双打时显示）-->
-          <view class="pos-row">
-            <view class="pos-side">
-              <text class="pos-tag">右</text>
-              <text class="pos-score-sm">{{item.scoreA}}</text>
+        <!-- 下排：第二位选手位置（双打时显示）-->
+        <view class="pos-row" wx:if="{{teamAName1 || teamBName1}}">
+          <view class="pos-side">
+            <text class="pos-tag">右</text>
+            <text class="pos-score-sm">{{item.scoreA}}</text>
+            <view class="pos-name-wrap">
               <text class="pos-name">{{teamAName1}}</text>
-            </view>
-            <view class="vs-blank"></view>
-            <view class="pos-side pos-right">
-              <text class="pos-name">{{teamBName1}}</text>
-              <text class="pos-score-sm">{{item.scoreB}}</text>
-              <text class="pos-tag">左</text>
+              <text class="gender-icon {{teamAGender1 === 2 ? 'gender-f' : ''}}" wx:if="{{teamAName1}}">{{teamAGender1 === 2 ? '♀' : '♂'}}</text>
             </view>
           </view>
+          <view class="vs-blank"></view>
+          <view class="pos-side pos-right">
+            <view class="pos-name-wrap">
+              <text class="pos-name">{{teamBName1}}</text>
+              <text class="gender-icon {{teamBGender1 === 2 ? 'gender-f' : ''}}" wx:if="{{teamBName1}}">{{teamBGender1 === 2 ? '♀' : '♂'}}</text>
+            </view>
+            <text class="pos-score-sm">{{item.scoreB}}</text>
+            <text class="pos-tag">左</text>
+          </view>
+        </view>
 
           <!-- 发球指示 -->
           <view class="serve-badge {{servingSide === 'right' ? 'serve-right' : ''}}">
@@ -103,11 +115,10 @@
           </view>
         </view>
 
-        <!-- ===== 操作按钮行（参照左图）===== -->
+        <!-- ===== 操作按钮行 ===== -->
         <view class="action-row" wx:if="{{item.status !== 'finished'}}">
           <button class="action-btn action-reset" bindtap="onResetScore">重置</button>
-          <button class="action-btn action-save" bindtap="onSaveScore">保存比分</button>
-          <button class="action-btn action-next" bindtap="onNextCourt">下一场</button>
+          <button class="action-btn action-next" bindtap="onNextCourt">下一场 →</button>
         </view>
 
         <!-- 已结束标记 -->
@@ -127,13 +138,10 @@
           </view>
         </view>
 
-        <!-- 开炮按钮（独立一行） -->
+        <!-- 开炮按钮 -->
         <view class="cannon-btn-row" wx:if="{{item.status !== 'finished'}}">
           <button class="btn-cannon-full" bindtap="onShowCannon">
             💥 开炮
-          </button>
-          <button class="btn-finish-match" bindtap="onFinishMatch">
-            ✓ 本局结束
           </button>
         </view>
 

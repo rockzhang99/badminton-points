@@ -20,7 +20,7 @@ Page({
 
     // 炮分结果
     scoreMap: {} as Record<string, number>,
-    scoreEntries: [] as { memberId: string; name: string; avatar: string; score: number; rank: number; change: string }[],
+    scoreEntries: [] as { memberId: string; name: string; avatar: string; score: number; rank: number; change: string; netWins: number; gender: number }[],
 
     // 炮击统计
     mostCannoned: { name: '', count: 0 },
@@ -66,13 +66,18 @@ Page({
       .map(pid => {
         const m = memberMap.get(pid);
         const change = changes.find(c => c.memberId === pid);
+        // 从 change breakdown 解析 净胜分，如 "6胜1负" → netWins=5
+        const netMatch = (change?.breakdown || '').match(/(\d+)胜(\d+)负/);
+        const netWins = netMatch ? parseInt(netMatch[1]) - parseInt(netMatch[2]) : 0;
         return {
           memberId: pid,
           name: m?.nickname || pid.slice(0, 6),
           avatar: m?.avatarUrl || '',
+          gender: m?.gender ?? 1,
           score: scoreMap[pid] || 0,
           rank: 0,
-          change: change?.breakdown || ''
+          change: change?.breakdown || '',
+          netWins
         };
       })
       .sort((a, b) => b.score - a.score);
@@ -164,6 +169,28 @@ Page({
 
   /** 进入炮费分摊 */
   onGoBilling() {
+    // 把当前比赛数据存到本地缓存，确保算账页能读到（不依赖云端回读）
+    const app = getApp<IAppOption>();
+    const gd = app.globalData.currentGame as GameData;
+    // 直接用结果页已解析好的 scoreEntries 构造队员信息，确保昵称100%正确
+    const playerNames: Record<string, string> = {};
+    this.data.scoreEntries.forEach(e => { playerNames[e.memberId] = e.name; });
+    wx.setStorageSync('billingGameData', {
+      name: gd?.name || this.data.gameName,
+      mode: gd?.mode || this.data.mode,
+      cannonWeight: gd?.cannonWeight || this.data.cannonWeight,
+      players: gd?.players || [],
+      // 用 scoreEntries 中确认的 映射关系，算账页直接取名字
+      playerNames,
+      playerDetails: (gd?.members || []).map((m: any) => ({
+        _id: m._id,
+        nickname: playerNames[m._id] || m.nickname || '',
+        gender: m.gender ?? 1,
+        avatarUrl: m.avatarUrl || ''
+      })),
+      cannonScores: this.data.scoreMap,
+      matches: gd?.matches || []
+    });
     wx.navigateTo({
       url: `/pages/settlement/billing/billing?gameId=${this.data.gameId}`
     });

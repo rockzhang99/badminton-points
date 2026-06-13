@@ -1,42 +1,44 @@
 /* ============================================
-   星雨炮分榜 - 全局样式
-   设计令牌：深蓝星夜 + 橙红炮火
+   星羽炮分榜 - 全局样式
+   设计语言：极简白 + 卡片系统 + 自然绿
    ============================================ */
 
-/* CSS 变量 —— 设计令牌 */
 page {
-  --color-bg-primary: #0A1628;
-  --color-bg-secondary: #0F1F3D;
-  --color-bg-card: #152240;
-  --color-bg-card-hover: #1A2D52;
+  --color-bg-primary: #F8F9FA;
+  --color-bg-secondary: #F0F1F3;
+  --color-bg-card: #FFFFFF;
+  --color-bg-card-hover: #F3F4F6;
 
-  --color-brand: #FF5A33;
-  --color-brand-light: #FF7B5C;
-  --color-brand-dark: #D9441F;
+  --color-brand: #00754A;
+  --color-brand-light: #059669;
+  --color-brand-dark: #065F46;
 
-  --color-gold: #FFD700;
-  --color-silver: #C0C0C0;
-  --color-bronze: #CD7F32;
+  --color-gold: #D4A853;
+  --color-silver: #9CA3AF;
+  --color-bronze: #C8854B;
 
-  --color-text-primary: #EAEEF2;
-  --color-text-secondary: #8899AA;
-  --color-text-hint: #556677;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #6B7280;
+  --color-text-hint: #9CA3AF;
 
-  --color-win: #4CAF50;
-  --color-lose: #FF5252;
-  --color-male: #448AFF;
-  --color-female: #FF4081;
+  --color-win: #059669;
+  --color-lose: #EF4444;
+  --color-male: #3B82F6;
+  --color-female: #EC4899;
 
-  --radius-sm: 6rpx;
-  --radius-md: 12rpx;
-  --radius-lg: 20rpx;
+  --color-border: #E5E7EB;
 
-  --shadow-card: 0 4rpx 20rpx rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 20rpx rgba(255, 90, 51, 0.3);
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+
+  --shadow-sm: 0 1rpx 3rpx rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4rpx 24rpx rgba(0, 0, 0, 0.08);
 
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', sans-serif;
   font-size: 28rpx;
   line-height: 1.6;
   box-sizing: border-box;
@@ -54,49 +56,49 @@ button, input, textarea, navigator {
   border-radius: var(--radius-md);
   padding: 24rpx;
   margin: 16rpx 24rpx;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-sm);
 }
 
-/* 炮火按钮 */
+/* 主按钮 */
 .btn-cannon {
-  background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-dark) 100%);
+  background: var(--color-brand);
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
   font-size: 30rpx;
   font-weight: 600;
   padding: 20rpx 48rpx;
-  position: relative;
-  overflow: hidden;
 }
 
-.btn-cannon::after {
-  border: none;
-}
-
-.btn-cannon:active {
-  transform: scale(0.97);
-  opacity: 0.9;
-}
-
+.btn-cannon::after { border: none; }
+.btn-cannon:active { opacity: 0.85; }
 .btn-cannon[disabled] {
   background: var(--color-text-hint);
-  color: var(--color-text-secondary);
+  color: #fff;
 }
 
 /* 次要按钮 */
 .btn-secondary {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-card);
   color: var(--color-text-primary);
-  border: 2rpx solid var(--color-text-hint);
+  border: 1rpx solid var(--color-border);
   border-radius: var(--radius-sm);
   font-size: 28rpx;
   padding: 16rpx 40rpx;
 }
 
-.btn-secondary::after {
+.btn-secondary::after { border: none; }
+.btn-secondary:active { background: var(--color-bg-card-hover); }
+
+/* 品牌色按钮 */
+.btn-brand {
+  background: var(--color-brand);
+  color: #fff;
   border: none;
 }
+
+.btn-brand::after { border: none; }
+.btn-brand:active { background: var(--color-brand-dark); }
 
 /* 通用文本样式 */
 .text-brand { color: var(--color-brand); }
@@ -104,11 +106,17 @@ button, input, textarea, navigator {
 .text-secondary { color: var(--color-text-secondary); }
 .text-hint { color: var(--color-text-hint); }
 .text-win { color: var(--color-win); }
+.text-success { color: var(--color-win); }
 .text-lose { color: var(--color-lose); }
+.text-danger { color: var(--color-lose); }
+.text-lose { color: var(--color-lose); }
+.text-male { color: var(--color-male); }
+.text-female { color: var(--color-female); }
 
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .text-bold { font-weight: 700; }
+.text-medium { font-weight: 500; }
 
 .text-xl { font-size: 40rpx; }
 .text-lg { font-size: 34rpx; }
@@ -129,8 +137,14 @@ button, input, textarea, navigator {
 .mt-16 { margin-top: 16rpx; }
 .mt-24 { margin-top: 24rpx; }
 .mt-32 { margin-top: 32rpx; }
+.mb-8 { margin-bottom: 8rpx; }
 .mb-16 { margin-bottom: 16rpx; }
 .mb-24 { margin-bottom: 24rpx; }
+.mr-8 { margin-right: 8rpx; }
+.mr-16 { margin-right: 16rpx; }
+.ml-8 { margin-left: 8rpx; }
+.ml-16 { margin-left: 16rpx; }
+.mx-16 { margin: 0 16rpx; }
 .p-16 { padding: 16rpx; }
 .p-24 { padding: 24rpx; }
 
@@ -154,7 +168,7 @@ button, input, textarea, navigator {
 .empty-state .empty-icon {
   font-size: 80rpx;
   margin-bottom: 24rpx;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 .empty-state .empty-text {
@@ -166,18 +180,33 @@ button, input, textarea, navigator {
 /* 炮火标签 */
 .tag-cannon {
   display: inline-block;
-  background: rgba(255, 90, 51, 0.15);
+  background: rgba(0, 117, 74, 0.08);
   color: var(--color-brand);
   font-size: 22rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 4rpx;
+  font-weight: 600;
+  padding: 4rpx 14rpx;
+  border-radius: 6rpx;
+}
+
+.tag-light {
+  display: inline-block;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 6rpx;
 }
 
 /* 分割线 */
 .divider {
   height: 1rpx;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--color-border);
   margin: 16rpx 0;
+}
+
+.divider-thin {
+  height: 1rpx;
+  background: var(--color-bg-secondary);
 }
 
 /* 徽章样式 */

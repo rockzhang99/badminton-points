@@ -1,7 +1,18 @@
 /* pages/cannon/create/create.wxss */
 
+/* 玩法信息卡 */
+.page-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.page-section {
+  margin-top: 24rpx;
+}
+
 .play-info {
-  border-left: 6rpx solid var(--color-brand);
+  border-left: 4rpx solid var(--color-brand);
 }
 
 .mode-icon {
@@ -12,17 +23,41 @@
   font-size: 28rpx;
   color: var(--color-text-primary);
   font-weight: 600;
+  margin-bottom: 12rpx;
 }
 
 .form-input {
   width: 100%;
-  height: 80rpx;
+  height: 84rpx;
   background: var(--color-bg-secondary);
   border-radius: var(--radius-sm);
-  padding: 0 20rpx;
-  margin-top: 16rpx;
+  padding: 0 24rpx;
   color: var(--color-text-primary);
   font-size: 28rpx;
+  border: 1rpx solid transparent;
+}
+
+.form-input:focus {
+  border-color: var(--color-brand);
+  background: #fff;
+}
+
+.form-picker {
+  width: 100%;
+  height: 84rpx;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 0 24rpx;
+  display: flex;
+  align-items: center;
+  color: var(--color-text-primary);
+  font-size: 28rpx;
+  justify-content: space-between;
+}
+
+.form-picker text:last-child {
+  color: var(--color-text-hint);
+  font-size: 24rpx;
 }
 
 .member-grid {
@@ -31,7 +66,7 @@
   gap: 16rpx;
 }
 
-/* ===== 选手输入列表 ===== */
+/* 选手列表 */
 .player-list {
   margin-top: 16rpx;
 }
@@ -41,17 +76,17 @@
   align-items: center;
   background: var(--color-bg-secondary);
   border-radius: var(--radius-sm);
-  padding: 12rpx 16rpx;
-  margin-bottom: 16rpx;
+  padding: 14rpx 18rpx;
+  margin-bottom: 12rpx;
 }
 
 .player-index {
-  width: 52rpx;
-  height: 52rpx;
+  width: 48rpx;
+  height: 48rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: var(--color-brand);
   color: #fff;
-  font-size: 26rpx;
+  font-size: 24rpx;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -62,19 +97,41 @@
 .player-input {
   flex: 1;
   height: 64rpx;
-  margin-left: 20rpx;
+  margin-left: 16rpx;
   font-size: 28rpx;
   color: var(--color-text-primary);
   background: transparent;
 }
 
-.player-remove {
-  width: 48rpx;
-  height: 48rpx;
+/* 性别切换按钮 */
+.gender-btn {
+  width: 56rpx;
+  height: 56rpx;
   border-radius: 50%;
-  background: rgba(255, 90, 51, 0.1);
-  color: #FF5A33;
-  font-size: 32rpx;
+  background: #EFF6FF;
+  color: #3B82F6;
+  font-size: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  border: 2rpx solid transparent;
+}
+
+.gender-btn.gender-female {
+  background: #FDF2F8;
+  color: #EC4899;
+  border-color: #EC4899;
+}
+
+.player-remove {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--color-lose);
+  font-size: 30rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,19 +157,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 小程序 button 必须重置 */
   margin: 0;
   padding: 0;
   line-height: 76rpx;
 }
 
 .btn-add-player::after,
-.btn-import-player::after {
-  border: none;
-}
+.btn-import-player::after { border: none; }
 
 .btn-add-player {
-  background: linear-gradient(135deg, #f093fb, #f5576c);
+  background: var(--color-brand);
 }
 
 .btn-add-player[disabled] {
@@ -120,20 +174,20 @@
 }
 
 .btn-import-player {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: var(--color-male);
 }
 
 .player-stats {
   line-height: 1.6;
   padding-top: 16rpx;
-  border-top: 1rpx solid rgba(255,255,255,0.06);
+  border-top: 1rpx solid var(--color-border);
 }
 
-/* ===== 导入弹窗 ===== */
+/* 导入弹窗 */
 .modal-mask {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.4);
   z-index: 100;
 }
 
@@ -145,8 +199,9 @@
   width: 640rpx;
   max-height: 80vh;
   background: var(--color-bg-card);
-  border-radius: 24rpx;
+  border-radius: var(--radius-lg);
   z-index: 101;
+  box-shadow: var(--shadow-lg);
   display: none;
 }
 
@@ -159,13 +214,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28rpx 28rpx 20rpx;
-  border-bottom: 1rpx solid rgba(255,255,255,0.06);
+  padding: 28rpx;
+  border-bottom: 1rpx solid var(--color-border);
   flex-shrink: 0;
 }
 
 .import-modal-title {
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: 700;
   color: var(--color-text-primary);
 }
@@ -181,7 +236,7 @@
 }
 
 .import-modal-body {
-  padding: 20rpx 28rpx 0;
+  padding: 24rpx 28rpx;
   flex: 1;
   overflow-y: auto;
   min-height: 0;
@@ -222,7 +277,7 @@
   display: flex;
   gap: 12rpx;
   padding: 16rpx 24rpx 28rpx;
-  border-top: 1rpx solid rgba(255,255,255,0.06);
+  border-top: 1rpx solid var(--color-border);
   flex-shrink: 0;
 }
 
@@ -244,9 +299,7 @@
 
 .btn-cancel::after,
 .btn-confirm-import::after,
-.btn-confirm-all::after {
-  border: none;
-}
+.btn-confirm-all::after { border: none; }
 
 .btn-cancel {
   background: var(--color-bg-secondary);
@@ -255,16 +308,17 @@
 
 .btn-confirm-import {
   font-weight: 600;
-  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  background: var(--color-brand);
   color: #fff;
 }
 
 .btn-confirm-all {
-  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+  background: var(--color-male);
   color: #fff;
   font-weight: 600;
 }
 
+/* 队员选择 */
 .member-item {
   width: 100rpx;
   display: flex;
@@ -277,7 +331,7 @@
 }
 
 .member-item.selected {
-  background: rgba(255, 90, 51, 0.15);
+  background: rgba(0, 117, 74, 0.08);
   border: 2rpx solid var(--color-brand);
 }
 
@@ -303,6 +357,7 @@
   justify-content: center;
 }
 
+/* 底部按钮 */
 .footer-bar {
   padding: 24rpx;
   padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
@@ -313,8 +368,13 @@
   height: 100rpx;
   font-size: 36rpx;
   letter-spacing: 4rpx;
+  background: var(--color-brand);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
 }
 
+.btn-fire::after { border: none; }
 .btn-fire.disabled {
   opacity: 0.4;
 }

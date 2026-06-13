@@ -36,6 +36,12 @@ Page({
     teamBName0: '',
     teamBName1: '',
 
+    // 性别图标（computed）
+    teamAGender0: 1,
+    teamAGender1: 1,
+    teamBGender0: 1,
+    teamBGender1: 1,
+
     // 发球方指示
     servingSide: 'right' as 'left' | 'right'
   },
@@ -87,11 +93,21 @@ Page({
     const match = this.data.matches[this.data.currentCourt];
     if (!match) return;
 
+    const g = (id: string) => {
+      if (!id) return 1;
+      const m = this.data.members.find((x: any) => x._id === id);
+      return m?.gender ?? 1;
+    };
+
     this.setData({
       teamAName0: this.getMemberName(match.teamA[0]),
+      teamAGender0: g(match.teamA[0]),
       teamAName1: match.teamA.length > 1 ? this.getMemberName(match.teamA[1]) : '',
+      teamAGender1: g(match.teamA.length > 1 ? match.teamA[1] : ''),
       teamBName0: this.getMemberName(match.teamB[0]),
-      teamBName1: match.teamB.length > 1 ? this.getMemberName(match.teamB[1]) : ''
+      teamBGender0: g(match.teamB[0]),
+      teamBName1: match.teamB.length > 1 ? this.getMemberName(match.teamB[1]) : '',
+      teamBGender1: g(match.teamB.length > 1 ? match.teamB[1] : '')
     });
   },
 
@@ -167,32 +183,45 @@ Page({
     });
   },
 
-  /** 保存比分（仅标记状态） */
-  onSaveScore() {
+  /** 下一场 → 自动结束当前局（判定胜负）并跳转 */
+  onNextCourt() {
     const idx = this.data.currentCourt;
     const match = this.data.matches[idx];
-    if (match.scoreA === 0 && match.scoreB === 0) {
-      wx.showToast({ title: '还没有计分哦', icon: 'none' });
-      return;
+
+    // 自动结束当前局：有分差就判胜
+    if (match.scoreA !== match.scoreB && match.status !== 'finished') {
+      this.finishCurrentMatch();
     }
 
-    wx.showToast({ title: '比分已保存', icon: 'success' });
-  },
-
-  /** 跳到下一场 */
-  onNextCourt() {
+    // 跳到下一场
     const total = this.data.totalCount;
-    let next = this.data.currentCourt + 1;
-    // 跳过空对阵
+    let next = idx + 1;
     while (next < total && (this.data.matches[next].teamA.length === 0 || this.data.matches[next].teamB.length === 0)) {
       next++;
     }
-    if (next >= total) {
-      wx.showToast({ title: '已经是最后一场了', icon: 'none' });
-      return;
+    if (next < total) {
+      this.setData({ currentCourt: next });
+      this.updateTeamNames();
+    } else {
+      wx.showToast({ title: '已是最后一场', icon: 'none' });
     }
-    this.setData({ currentCourt: next });
-    this.updateTeamNames();
+  },
+
+  /** 结束当前场：判定胜负、标记 finished */
+  finishCurrentMatch() {
+    const idx = this.data.currentCourt;
+    const matches = [...this.data.matches];
+    const match = { ...matches[idx] };
+
+    if (match.scoreA === match.scoreB) return; // 平局不结束
+
+    match.winner = match.scoreA > match.scoreB ? 'A' : 'B';
+    match.status = 'finished';
+    matches[idx] = match;
+    this.setData({ matches });
+    this.updateProgress();
+
+    wx.showToast({ title: `${match.winner === 'A' ? 'A队' : 'B队'} 获胜！`, icon: 'success' });
   },
 
   /** 重新开打（已结束的比赛恢复为进行中） */
@@ -206,27 +235,6 @@ Page({
     };
     this.setData({ matches });
     this.updateProgress();
-  },
-
-  /** 本局结束 */
-  onFinishMatch() {
-    const idx = this.data.currentCourt;
-    const matches = [...this.data.matches];
-    const match = { ...matches[idx] };
-
-    if (match.scoreA === match.scoreB) {
-      wx.showToast({ title: '比分不能平局', icon: 'none' });
-      return;
-    }
-
-    match.winner = match.scoreA > match.scoreB ? 'A' : 'B';
-    match.status = 'finished';
-    matches[idx] = match;
-    this.setData({ matches });
-
-    this.updateProgress();
-
-    wx.showToast({ title: `${match.winner === 'A' ? 'A队' : 'B队'} 获胜！`, icon: 'success' });
   },
 
   /** 显示开炮面板 */
