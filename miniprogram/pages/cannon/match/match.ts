@@ -2,6 +2,12 @@
 import { PlayMode, Match } from '../../../types/index';
 import { generateMatches, getMatchPreview } from '../../../utils/match-engine';
 
+/** 建局时传入的临时选手数据 */
+interface TempPlayer {
+  id: string;
+  nickname: string;
+}
+
 Page({
   data: {
     mode: '' as PlayMode,
@@ -18,33 +24,35 @@ Page({
     const mode = options.mode as PlayMode;
     const name = decodeURIComponent(options.name || '');
     const weight = parseFloat(options.weight) || 1.0;
-    const players = (options.players || '').split(',').filter(Boolean);
     const sound = options.sound === '1';
+
+    // 解析选手数据：新格式为 JSON 编码的 {id, nickname}[] 数组
+    let players: TempPlayer[] = [];
+    let playerIds: string[] = [];
+    try {
+      players = JSON.parse(decodeURIComponent(options.players || '[]'));
+      if (!Array.isArray(players)) players = [];
+    } catch {
+      // 兼容旧格式（逗号分隔的 ID 列表）
+      const oldIds = (options.players || '').split(',').filter(Boolean);
+      players = oldIds.map(id => ({ id, nickname: id.slice(0, 6) }));
+    }
+
+    playerIds = players.map(p => p.id);
+
+    // 将临时选手数据转为兼容 members 格式 {_id, nickname}
+    const members = players.map(p => ({
+      _id: p.id,
+      nickname: p.nickname,
+      avatarUrl: ''
+    }));
 
     this.setData({
       mode, gameName: name, cannonWeight: weight,
-      playerIds: players, soundEnabled: sound
+      playerIds, members, soundEnabled: sound
     });
 
-    this.loadMemberInfo(players);
-    this.generateMatches(mode, players);
-  },
-
-  /** 加载队员详情 */
-  loadMemberInfo(ids: string[]) {
-    const db = wx.cloud.database();
-    db.collection('members')
-      .where({ _id: db.command.in(ids) })
-      .get()
-      .then(res => {
-        this.setData({ members: res.data });
-      })
-      .catch(() => {
-        // 离线模式
-        const cached = wx.getStorageSync('members') || [];
-        const filtered = cached.filter((m: any) => ids.includes(m._id));
-        this.setData({ members: filtered });
-      });
+    this.generateMatches(mode, playerIds);
   },
 
   /** 生成对阵 */

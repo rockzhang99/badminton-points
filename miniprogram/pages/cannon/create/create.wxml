@@ -48,36 +48,75 @@
     </view>
   </view>
 
-  <!-- 队员选择 -->
+  <!-- 输入选手昵称 -->
   <view class="card">
-    <view class="flex-between mb-24">
-      <view class="form-label">
-        选择队员
-        <text class="text-sm text-hint">
-          （已选 {{selectedMembers.length}}/{{playModeConfig.maxPlayers}}）
-        </text>
-      </view>
-      <view class="btn-secondary text-xs p-16" bindtap="onAddMember">+ 添加</view>
+    <view class="flex mb-24">
+      <view class="form-label">🏸 输入选手昵称</view>
+      <text class="text-sm text-hint ml-8">（{{playModeConfig.minPlayers}}-{{playModeConfig.maxPlayers}}人）</text>
     </view>
 
-    <view class="member-grid" wx:if="{{members.length}}">
-      <view
-        class="member-item {{selectedMembers.indexOf(item._id) > -1 ? 'selected' : ''}}"
-        wx:for="{{members}}"
-        wx:key="_id"
-        data-id="{{item._id}}"
-        bindtap="onSelectMember"
-      >
-        <image class="member-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
-        <view class="text-xs ellipsis mt-8" style="width:100%;text-align:center;">
-          {{item.nickname}}
-        </view>
-        <view class="member-check" wx:if="{{selectedMembers.indexOf(item._id) > -1}}">✓</view>
+    <!-- 选手列表 -->
+    <view class="player-list">
+      <view class="player-item" wx:for="{{players}}" wx:key="id">
+        <view class="player-index">{{index + 1}}</view>
+        <input
+          class="player-input"
+          value="{{item.nickname}}"
+          placeholder="请输入选手{{index + 1}}昵称"
+          maxlength="10"
+          data-index="{{index}}"
+          bindinput="onPlayerInput"
+        />
+        <view class="player-remove" wx:if="{{players.length > playModeConfig.minPlayers}}" data-index="{{index}}" bindtap="onRemovePlayer">×</view>
       </view>
     </view>
 
-    <view class="empty-state" wx:else>
-      <view class="empty-text">暂无队员，先去炮库添加吧</view>
+    <!-- 操作按钮 -->
+    <view class="player-actions">
+      <button class="btn-add-player" disabled="{{players.length >= playModeConfig.maxPlayers}}" bindtap="onAddPlayer">+ 添加选手</button>
+      <button class="btn-import-player" bindtap="onShowImportModal">📥 从报名导入</button>
+    </view>
+
+    <!-- 统计信息 -->
+    <view class="player-stats text-xs text-hint mt-24">
+      当前选手：<text class="text-brand">{{players.length}}</text>人
+      <text class="ml-24" wx:if="{{players.length >= playModeConfig.minPlayers}}">
+        ，每人参赛场次：<text class="text-brand">{{matchCountPerPlayer}}</text>场
+      </text>
+      <text class="ml-24" wx:if="{{totalMatches > 0}}">
+        ，比赛场数：<text class="text-brand">{{totalMatches}}</text>场
+      </text>
+    </view>
+  </view>
+
+  <!-- 从报名导入弹窗 -->
+  <view class="modal-mask" wx:if="{{showImportModal}}" bindtap="onHideImportModal"></view>
+  <view class="import-modal {{showImportModal ? 'show' : ''}}">
+    <view class="import-modal-header">
+      <text class="import-modal-title">📥 从报名信息导入</text>
+      <view class="import-modal-close" bindtap="onHideImportModal">×</view>
+    </view>
+
+    <view class="import-modal-body">
+      <view class="form-label mb-16">报名信息文本</view>
+      <view class="import-toolbar">
+        <view class="import-btn-paste" bindtap="onPasteClipboard">📋 粘贴</view>
+        <view class="import-btn-clear" bindtap="onClearImportText">🗑 清除</view>
+      </view>
+      <textarea
+        class="import-textarea"
+        value="{{importText}}"
+        placeholder="请粘贴闪动或微信接龙完整报名信息&#10;（如：1.【3.0】FEI 🍃&#10;或 1. FEI）"
+        maxlength="2000"
+        auto-height
+        bindinput="onImportTextInput"
+      />
+    </view>
+
+    <view class="import-modal-footer">
+      <button class="btn-cancel" bindtap="onHideImportModal">取消</button>
+      <button class="btn-confirm-import" bindtap="onImportPlayers">顺序添加</button>
+      <button class="btn-confirm-import btn-confirm-all" bindtap="onConfirmImport">确认添加</button>
     </view>
   </view>
 

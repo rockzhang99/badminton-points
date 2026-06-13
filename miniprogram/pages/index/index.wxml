@@ -7,25 +7,28 @@
     <view class="hero-slogan">{{cannonSlogan}}</view>
   </view>
 
-  <!-- 玩法选择卡片 -->
+  <!-- 玩法选择卡片 - 彩色网格 -->
   <view class="section">
     <view class="section-title">选择炮式玩法</view>
-    <scroll-view scroll-x class="mode-scroll" wx:if="{{playModes.length}}">
-      <view class="mode-list">
-        <view
-          class="mode-card"
-          wx:for="{{playModes}}"
-          wx:key="mode"
-          data-mode="{{item}}"
-          bindtap="onSelectMode"
-        >
-          <view class="mode-icon">{{item.icon}}</view>
-          <view class="mode-name">{{item.name}}</view>
-          <view class="mode-desc">{{item.desc}}</view>
-          <view class="mode-count">{{item.minPlayers}}-{{item.maxPlayers}}人</view>
+    <view class="mode-grid" wx:if="{{playModes.length}}">
+      <view
+        class="grid-card card-{{index % 6}}"
+        wx:for="{{playModes}}"
+        wx:key="mode"
+        data-mode="{{item}}"
+        bindtap="onSelectMode"
+      >
+        <view class="grid-card-inner">
+          <view class="grid-icon-wrap">
+            <text class="grid-icon">{{item.icon}}</text>
+          </view>
+          <view class="grid-text">
+            <view class="grid-name">{{item.name}}</view>
+            <view class="grid-sub">{{item.descShort || item.desc}}</view>
+          </view>
         </view>
       </view>
-    </scroll-view>
+    </view>
   </view>
 
   <!-- 最近比赛 -->

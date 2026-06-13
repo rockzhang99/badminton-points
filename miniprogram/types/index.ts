@@ -19,6 +19,7 @@ export interface PlayModeConfig {
   name: string;
   nameEn: string;
   desc: string;
+  descShort?: string;
   minPlayers: number;
   maxPlayers: number;
   icon: string;

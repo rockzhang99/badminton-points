@@ -31,6 +31,240 @@
   gap: 16rpx;
 }
 
+/* ===== 选手输入列表 ===== */
+.player-list {
+  margin-top: 16rpx;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 12rpx 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.player-index {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.player-input {
+  flex: 1;
+  height: 64rpx;
+  margin-left: 20rpx;
+  font-size: 28rpx;
+  color: var(--color-text-primary);
+  background: transparent;
+}
+
+.player-remove {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: rgba(255, 90, 51, 0.1);
+  color: #FF5A33;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+}
+
+.player-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 24rpx;
+}
+
+.btn-add-player,
+.btn-import-player {
+  flex: 1;
+  height: 76rpx;
+  border-radius: var(--radius-sm);
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 小程序 button 必须重置 */
+  margin: 0;
+  padding: 0;
+  line-height: 76rpx;
+}
+
+.btn-add-player::after,
+.btn-import-player::after {
+  border: none;
+}
+
+.btn-add-player {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.btn-add-player[disabled] {
+  opacity: 0.4;
+}
+
+.btn-import-player {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.player-stats {
+  line-height: 1.6;
+  padding-top: 16rpx;
+  border-top: 1rpx solid rgba(255,255,255,0.06);
+}
+
+/* ===== 导入弹窗 ===== */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+.import-modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 640rpx;
+  max-height: 80vh;
+  background: var(--color-bg-card);
+  border-radius: 24rpx;
+  z-index: 101;
+  display: none;
+}
+
+.import-modal.show {
+  display: flex;
+  flex-direction: column;
+}
+
+.import-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 28rpx 20rpx;
+  border-bottom: 1rpx solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.import-modal-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.import-modal-close {
+  width: 48rpx;
+  height: 48rpx;
+  font-size: 36rpx;
+  color: var(--color-text-hint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.import-modal-body {
+  padding: 20rpx 28rpx 0;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.import-toolbar {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.import-btn-paste,
+.import-btn-clear {
+  flex: 1;
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  font-size: 26rpx;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.import-textarea {
+  width: 100%;
+  min-height: 200rpx;
+  max-height: 280rpx;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 20rpx;
+  font-size: 26rpx;
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+  margin-bottom: 20rpx;
+}
+
+.import-modal-footer {
+  display: flex;
+  gap: 12rpx;
+  padding: 16rpx 24rpx 28rpx;
+  border-top: 1rpx solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.btn-cancel,
+.btn-confirm-import,
+.btn-confirm-all {
+  flex: 1;
+  height: 72rpx;
+  border-radius: var(--radius-sm);
+  font-size: 26rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  line-height: 72rpx;
+}
+
+.btn-cancel::after,
+.btn-confirm-import::after,
+.btn-confirm-all::after {
+  border: none;
+}
+
+.btn-cancel {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+.btn-confirm-import {
+  font-weight: 600;
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: #fff;
+}
+
+.btn-confirm-all {
+  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+  color: #fff;
+  font-weight: 600;
+}
+
 .member-item {
   width: 100rpx;
   display: flex;

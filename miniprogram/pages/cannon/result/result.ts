@@ -103,12 +103,20 @@ Page({
   /** 保存比赛到云数据库 */
   saveGame(gd: GameData) {
     const db = wx.cloud.database();
+    // 同时保存选手详情（昵称），用于历史回放和重赛
+    const playerDetails = gd.members.map(m => ({
+      _id: m._id,
+      nickname: m.nickname,
+      avatarUrl: m.avatarUrl || ''
+    }));
+
     const gameRecord = {
       name: gd.name,
       playMode: gd.mode,
       cannonWeight: gd.cannonWeight,
       status: 'finished',
       players: gd.players,
+      playerDetails,
       matches: gd.matches,
       cannonScores: this.data.scoreMap,
       createdBy: getApp<IAppOption>().globalData.userInfo?.openid || '',

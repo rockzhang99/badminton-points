@@ -7,7 +7,7 @@
   <view class="progress-bar">
     <view class="progress-fill" style="width: {{progress}}%"></view>
     <view class="progress-text text-xs text-secondary">
-      {{finishedCount}} / {{totalCount}} 场
+      第 {{currentCourt + 1}} / {{totalCount}} 场
     </view>
   </view>
 
@@ -31,33 +31,91 @@
           </view>
         </view>
 
-        <!-- 对阵双方 -->
-        <view class="score-area">
-          <!-- A 队 -->
-          <view class="team-panel team-a">
-            <view class="player-names">
-              <view class="player-name" wx:for="{{item.teamA}}" wx:key="*this">
-                {{utils.getMemberName(item, members, players)}}
-              </view>
+        <!-- ===== 对阵信息卡（参照左图）===== -->
+        <view class="match-info-card">
+          <!-- 上排：选手位置 -->
+          <view class="pos-row">
+            <view class="pos-side">
+              <text class="pos-tag">左</text>
+              <text class="pos-score-sm">{{item.scoreA}}</text>
+              <text class="pos-name">{{teamAName0}}</text>
             </view>
-            <view class="team-tag">A</view>
+            <view class="vs-badge">VS</view>
+            <view class="pos-side pos-right">
+              <text class="pos-name">{{teamBName0}}</text>
+              <text class="pos-score-sm">{{item.scoreB}}</text>
+              <text class="pos-tag">右</text>
+            </view>
           </view>
 
-          <!-- 比分 -->
-          <view class="score-display">
-            <view class="score-number {{item.winner === 'A' ? 'text-win' : ''}}">{{item.scoreA}}</view>
-            <view class="score-colon">:</view>
-            <view class="score-number {{item.winner === 'B' ? 'text-win' : ''}}">{{item.scoreB}}</view>
+          <!-- 交换箭头行 -->
+          <view class="swap-row">
+            <view class="swap-arrow">⇅</view>
+            <view class="swap-hint">⇄</view>
+            <view class="swap-arrow">⇅</view>
           </view>
 
-          <!-- B 队 -->
-          <view class="team-panel team-b">
-            <view class="team-tag">B</view>
-            <view class="player-names">
-              <view class="player-name" wx:for="{{item.teamB}}" wx:key="*this">
-                {{utils.getMemberName(item, members, players)}}
-              </view>
+          <!-- 下排：第二位选手位置（双打时显示）-->
+          <view class="pos-row">
+            <view class="pos-side">
+              <text class="pos-tag">右</text>
+              <text class="pos-score-sm">{{item.scoreA}}</text>
+              <text class="pos-name">{{teamAName1}}</text>
             </view>
+            <view class="vs-blank"></view>
+            <view class="pos-side pos-right">
+              <text class="pos-name">{{teamBName1}}</text>
+              <text class="pos-score-sm">{{item.scoreB}}</text>
+              <text class="pos-tag">左</text>
+            </view>
+          </view>
+
+          <!-- 发球指示 -->
+          <view class="serve-badge {{servingSide === 'right' ? 'serve-right' : ''}}">
+            {{servingSide === 'right' ? '右边发球' : '左边发球'}}
+          </view>
+        </view>
+
+        <!-- ===== 计分板 + 比分调节（参照左图）===== -->
+        <view class="scoreboard-card">
+          <!-- 大号比分 -->
+          <view class="big-scores">
+            <view class="big-num {{item.winner === 'A' ? 'text-win' : ''}}">{{item.scoreA}}</view>
+            <view class="big-colon">:</view>
+            <view class="big-num {{item.winner === 'B' ? 'text-win' : ''}}">{{item.scoreB}}</view>
+          </view>
+
+          <!-- ± 按钮 -->
+          <view class="pm-buttons" wx:if="{{item.status !== 'finished'}}">
+            <button class="pm-btn pm-minus" bindtap="onMinusA">−</button>
+            <button class="pm-btn pm-plus" bindtap="onAddA">+</button>
+            <button class="pm-btn pm-minus" bindtap="onMinusB">−</button>
+            <button class="pm-btn pm-plus" bindtap="onAddB">+</button>
+          </view>
+        </view>
+
+        <!-- ===== 快速比分（参照左图）===== -->
+        <view class="quick-section" wx:if="{{item.status !== 'finished'}}">
+          <view class="section-label">快速比分</view>
+          <view class="quick-btns">
+            <button class="quick-btn" bindtap="onQuickScore" data-a="21" data-b="15">21 - 15</button>
+            <button class="quick-btn" bindtap="onQuickScore" data-a="15" data-b="21">15 - 21</button>
+          </view>
+        </view>
+
+        <!-- ===== 操作按钮行（参照左图）===== -->
+        <view class="action-row" wx:if="{{item.status !== 'finished'}}">
+          <button class="action-btn action-reset" bindtap="onResetScore">重置</button>
+          <button class="action-btn action-save" bindtap="onSaveScore">保存比分</button>
+          <button class="action-btn action-next" bindtap="onNextCourt">下一场</button>
+        </view>
+
+        <!-- 已结束标记 -->
+        <view class="finished-badge" wx:if="{{item.status === 'finished'}}">
+          <view class="badge-text text-win text-bold">🏆 {{item.winner === 'A' ? 'A队' : 'B队'}} 获胜</view>
+          <!-- 已结束时也显示操作按钮 -->
+          <view class="action-row mt-24">
+            <button class="action-btn action-save" bindtap="onReopenMatch">重新开打</button>
           </view>
         </view>
 
@@ -65,41 +123,20 @@
         <view class="cannon-log" wx:if="{{item.cannonEvents.length}}">
           <view class="cannon-log-title text-xs text-hint">炮击记录</view>
           <view class="cannon-log-item text-xs" wx:for="{{item.cannonEvents}}" wx:key="index">
-            {{utils.getMemberName(event, members, players)}} →
-            {{utils.getMemberName(event, members, players)}}
+            {{getMemberName(event.from)}} → {{getMemberName(event.to)}}
           </view>
         </view>
 
-        <!-- 操作区 -->
-        <view class="control-area" wx:if="{{item.status !== 'finished'}}">
-          <!-- 比分调节 -->
-          <view class="score-controls">
-            <button class="ctrl-btn ctrl-minus" bindtap="onMinusA">-1</button>
-            <view class="ctrl-label text-xs text-hint">A队</view>
-            <button class="ctrl-btn ctrl-plus" bindtap="onAddA">+1</button>
-
-            <view class="ctrl-spacer"></view>
-
-            <button class="ctrl-btn ctrl-plus" bindtap="onAddB">+1</button>
-            <view class="ctrl-label text-xs text-hint">B队</view>
-            <button class="ctrl-btn ctrl-minus" bindtap="onMinusB">-1</button>
-          </view>
-
-          <!-- 开炮 + 结束按钮 -->
-          <view class="action-buttons">
-            <button class="btn-cannon flex-1" bindtap="onShowCannon">
-              💥 开炮
-            </button>
-            <button class="btn-finish flex-1" bindtap="onFinishMatch">
-              ✓ 本局结束
-            </button>
-          </view>
+        <!-- 开炮按钮（独立一行） -->
+        <view class="cannon-btn-row" wx:if="{{item.status !== 'finished'}}">
+          <button class="btn-cannon-full" bindtap="onShowCannon">
+            💥 开炮
+          </button>
+          <button class="btn-finish-match" bindtap="onFinishMatch">
+            ✓ 本局结束
+          </button>
         </view>
 
-        <!-- 已结束标记 -->
-        <view class="finished-badge" wx:if="{{item.status === 'finished'}}">
-          <view class="badge-text text-win text-bold">🏆 {{item.winner === 'A' ? 'A队' : 'B队'}} 获胜</view>
-        </view>
       </view>
     </swiper-item>
   </swiper>

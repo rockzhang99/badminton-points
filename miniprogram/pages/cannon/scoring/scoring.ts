@@ -1,5 +1,5 @@
 // pages/cannon/scoring/scoring.ts
-import { Match, CannnonEvent } from '../../../types/index';
+import { Match, CannonEvent } from '../../../types/index';
 import { calcMatchScores } from '../../../utils/score-engine';
 
 interface GameData {
@@ -28,7 +28,16 @@ Page({
     // 进度
     finishedCount: 0,
     totalCount: 0,
-    progress: 0
+    progress: 0,
+
+    // 对阵信息（computed）
+    teamAName0: '',
+    teamAName1: '',
+    teamBName0: '',
+    teamBName1: '',
+
+    // 发球方指示
+    servingSide: 'right' as 'left' | 'right'
   },
 
   onLoad() {
@@ -64,38 +73,46 @@ Page({
     });
 
     this.updateProgress();
+    this.updateTeamNames();
   },
 
   /** 切换场地（swiper change） */
   onCourtChange(e: any) {
     this.setData({ currentCourt: e.detail.current });
+    this.updateTeamNames();
+  },
+
+  /** 更新选手名称显示（支持单双打自适应） */
+  updateTeamNames() {
+    const match = this.data.matches[this.data.currentCourt];
+    if (!match) return;
+
+    this.setData({
+      teamAName0: this.getMemberName(match.teamA[0]),
+      teamAName1: match.teamA.length > 1 ? this.getMemberName(match.teamA[1]) : '',
+      teamBName0: this.getMemberName(match.teamB[0]),
+      teamBName1: match.teamB.length > 1 ? this.getMemberName(match.teamB[1]) : ''
+    });
   },
 
   /** 获取队员昵称 */
   getMemberName(id: string): string {
+    if (!id) return '';
     const m = this.data.members.find((x: any) => x._id === id);
     return m?.nickname || id.slice(0, 6);
   },
 
   /** A队 +1 */
-  onAddA() {
-    this.updateScore('A', 1);
-  },
+  onAddA() { this.updateScore('A', 1); },
 
   /** A队 -1 */
-  onMinusA() {
-    this.updateScore('A', -1);
-  },
+  onMinusA() { this.updateScore('A', -1); },
 
   /** B队 +1 */
-  onAddB() {
-    this.updateScore('B', 1);
-  },
+  onAddB() { this.updateScore('B', 1); },
 
   /** B队 -1 */
-  onMinusB() {
-    this.updateScore('B', -1);
-  },
+  onMinusB() { this.updateScore('B', -1); },
 
   /** 更新比分 */
   updateScore(team: 'A' | 'B', delta: number) {
@@ -114,6 +131,83 @@ Page({
     this.setData({ matches });
   },
 
+  /** 快速比分预设 */
+  onQuickScore(e: any) {
+    const a = parseInt(e.currentTarget.dataset.a);
+    const b = parseInt(e.currentTarget.dataset.b);
+    const idx = this.data.currentCourt;
+    const matches = [...this.data.matches];
+    const match = { ...matches[idx] };
+    match.scoreA = a;
+    match.scoreB = b;
+    match.status = 'playing';
+    matches[idx] = match;
+    this.setData({ matches });
+  },
+
+  /** 重置当前场比分 */
+  onResetScore() {
+    wx.showModal({
+      title: '重置比分',
+      content: '确定要重置当前场次比分吗？',
+      success: res => {
+        if (res.confirm) {
+          const idx = this.data.currentCourt;
+          const matches = [...this.data.matches];
+          matches[idx] = {
+            ...matches[idx],
+            scoreA: 0,
+            scoreB: 0,
+            winner: '',
+            status: 'pending'
+          };
+          this.setData({ matches });
+        }
+      }
+    });
+  },
+
+  /** 保存比分（仅标记状态） */
+  onSaveScore() {
+    const idx = this.data.currentCourt;
+    const match = this.data.matches[idx];
+    if (match.scoreA === 0 && match.scoreB === 0) {
+      wx.showToast({ title: '还没有计分哦', icon: 'none' });
+      return;
+    }
+
+    wx.showToast({ title: '比分已保存', icon: 'success' });
+  },
+
+  /** 跳到下一场 */
+  onNextCourt() {
+    const total = this.data.totalCount;
+    let next = this.data.currentCourt + 1;
+    // 跳过空对阵
+    while (next < total && (this.data.matches[next].teamA.length === 0 || this.data.matches[next].teamB.length === 0)) {
+      next++;
+    }
+    if (next >= total) {
+      wx.showToast({ title: '已经是最后一场了', icon: 'none' });
+      return;
+    }
+    this.setData({ currentCourt: next });
+    this.updateTeamNames();
+  },
+
+  /** 重新开打（已结束的比赛恢复为进行中） */
+  onReopenMatch() {
+    const idx = this.data.currentCourt;
+    const matches = [...this.data.matches];
+    matches[idx] = {
+      ...matches[idx],
+      status: 'playing',
+      winner: ''
+    };
+    this.setData({ matches });
+    this.updateProgress();
+  },
+
   /** 本局结束 */
   onFinishMatch() {
     const idx = this.data.currentCourt;
@@ -126,7 +220,6 @@ Page({
     }
 
     match.winner = match.scoreA > match.scoreB ? 'A' : 'B';
-    // 标记完成前，已有炮击事件 — 炮击已记录在 match.cannonEvents 中
     match.status = 'finished';
     matches[idx] = match;
     this.setData({ matches });
