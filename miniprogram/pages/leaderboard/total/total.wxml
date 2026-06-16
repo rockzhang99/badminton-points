@@ -30,7 +30,19 @@
       </view>
 
       <!-- 头像 -->
-      <image class="rank-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+      <image
+        wx:if="{{item.avatarUrl}}"
+        class="rank-avatar"
+        src="{{item.avatarUrl}}"
+        mode="aspectFill"
+      />
+      <view
+        wx:else
+        class="rank-avatar rank-avatar-default"
+        style="background-color: {{item.avatarColor || '#4CAF50'}};"
+      >
+        {{item.nickname[0] || '?'}}
+      </view>
 
       <!-- 信息 -->
       <view class="flex-1 ml-16">

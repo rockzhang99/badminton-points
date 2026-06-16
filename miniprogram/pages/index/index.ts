@@ -21,19 +21,43 @@ Page({
       .limit(3)
       .get()
       .then(res => {
+        const games = (res.data as any[]).map(g => ({
+          ...g,
+          timeShort: this.getTimeShort(g.createdAt),
+          playModeName: this.getModeName(g.playMode)
+        }));
         this.setData({
-          recentGames: res.data,
-          showEmpty: res.data.length === 0
+          recentGames: games,
+          showEmpty: games.length === 0
         });
       })
       .catch(() => {
         // 离线模式：从缓存读
         const cached = wx.getStorageSync('recentGames') || [];
+        const games = (cached as any[]).map(g => ({
+          ...g,
+          timeShort: this.getTimeShort(g.createdAt),
+          playModeName: this.getModeName(g.playMode)
+        }));
         this.setData({
-          recentGames: cached,
-          showEmpty: cached.length === 0
+          recentGames: games,
+          showEmpty: games.length === 0
         });
       });
+  },
+
+  getTimeShort(isoStr?: string): string {
+    if (!isoStr) return '';
+    try {
+      const d = new Date(isoStr);
+      return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    } catch { return ''; }
+  },
+
+  getModeName(modeId?: string): string {
+    if (!modeId) return '';
+    const found = PLAY_MODES.find(m => m.mode === modeId);
+    return found ? found.name : modeId;
   },
 
   /** 选择玩法，跳转建局页 */
@@ -46,12 +70,10 @@ Page({
     });
   },
 
-  /** 一键重新开炮 */
-  onReplay(e: any) {
-    const gameId = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: `/pages/cannon/create/create?replay=${gameId}`
-    });
+  /** 查看历史详情 */
+  onViewDetail(e: any) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: `/pages/arsenal/detail/detail?id=${id}` });
   },
 
   /** 进入历史比赛 */

@@ -194,7 +194,14 @@ Page({
     const { result, memberDetails, gameId, courtFee, shuttle1Count, shuttle1Price,
             shuttle2Count, shuttle2Price, otherFee, femaleMode, femaleDeductAmount,
             femaleFixedAmount } = this.data;
-    if (!result || !gameId) return;
+    if (!result) {
+      wx.showToast({ title: '请先计算分摊', icon: 'none' });
+      return;
+    }
+    if (!gameId) {
+      wx.showToast({ title: '未关联到比赛记录，无法保存', icon: 'none' });
+      return;
+    }
 
     const billRecord = {
       totalBill: result.totalBill,
@@ -224,9 +231,23 @@ Page({
     };
 
     const db = wx.cloud.database();
-    db.collection('games').doc(gameId).update({
-      data: { billing: billRecord }
-    }).then(() => {
+    const isLocal = (gameId || '').startsWith('local_');
+    const saveAction = isLocal
+      ? (() => {
+          // 本地模式：更新缓存的 games 列表
+          const games = wx.getStorageSync('games') || [];
+          const idx = games.findIndex((g: any) => g._id === gameId);
+          if (idx >= 0) {
+            games[idx] = { ...games[idx], billing: billRecord };
+          }
+          wx.setStorageSync('games', games);
+          return Promise.resolve();
+        })()
+      : db.collection('games').doc(gameId).update({
+          data: { billing: billRecord }
+        });
+
+    saveAction.then(() => {
       this.setData({ billSaved: true });
       wx.showToast({ title: '已保存到本次记录', icon: 'success' });
       wx.removeStorageSync('billingGameData');

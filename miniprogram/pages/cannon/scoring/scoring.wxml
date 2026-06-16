@@ -130,21 +130,6 @@
           </view>
         </view>
 
-        <!-- 炮击记录 -->
-        <view class="cannon-log" wx:if="{{item.cannonEvents.length}}">
-          <view class="cannon-log-title text-xs text-hint">炮击记录</view>
-          <view class="cannon-log-item text-xs" wx:for="{{item.cannonEvents}}" wx:key="index">
-            {{getMemberName(event.from)}} → {{getMemberName(event.to)}}
-          </view>
-        </view>
-
-        <!-- 开炮按钮 -->
-        <view class="cannon-btn-row" wx:if="{{item.status !== 'finished'}}">
-          <button class="btn-cannon-full" bindtap="onShowCannon">
-            💥 开炮
-          </button>
-        </view>
-
       </view>
     </swiper-item>
   </swiper>
@@ -154,32 +139,6 @@
     <button class="btn-cannon full-width" bindtap="onFinishAll">
       🚀 结束全部比赛，查看炮分
     </button>
-  </view>
-
-  <!-- 开炮面板（弹窗） -->
-  <view class="cannon-overlay" wx:if="{{showCannonPanel}}" bindtap="onCloseCannon">
-    <view class="cannon-panel" catchtap="noop">
-      <view class="cannon-panel-title">💥 选择挨炮对象</view>
-      <view class="cannon-panel-subtitle text-sm text-hint">
-        {{cannonFromMember}} 正在开炮...
-      </view>
-      <view class="cannon-targets">
-        <view
-          class="cannon-target"
-          wx:for="{{_cannonTargets}}"
-          wx:key="*this"
-          data-id="{{item}}"
-          bindtap="onSelectTarget"
-        >
-          <view class="cannon-target-avatar">
-            <image class="avatar-img" src="{{members[utils.findMemberIndex(item, members)].avatarUrl}}" mode="aspectFill" />
-          </view>
-          <view class="text-md mt-8">{{utils.getMemberName({_dummy: true}, members, [item])}}</view>
-          <view class="text-xs text-hint mt-4">点击挨炮</view>
-        </view>
-      </view>
-      <button class="btn-secondary mt-24" bindtap="onCloseCannon">取消</button>
-    </view>
   </view>
 
 </view>

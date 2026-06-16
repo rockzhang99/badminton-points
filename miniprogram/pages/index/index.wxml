@@ -49,19 +49,19 @@
     <!-- 最近比赛列表 -->
     <view class="recent-list" wx:else>
       <view
-        class="card recent-item flex-between"
+        class="card recent-item"
         wx:for="{{recentGames}}"
         wx:key="_id"
         data-id="{{item._id}}"
-        bindtap="onReplay"
+        bindtap="onViewDetail"
       >
         <view class="flex-1">
-          <view class="text-md text-bold">{{item.name}}</view>
+          <view class="text-md text-bold">{{item.name}} <text class="text-sm text-hint text-normal" wx:if="{{item.timeShort}}">{{item.timeShort}}</text></view>
           <view class="text-sm text-secondary mt-8">
-            {{item.players.length}}人 · {{item.playMode}}
+            {{item.players.length}}人 · {{item.playModeName || item.playMode}}
           </view>
         </view>
-        <view class="btn-secondary text-sm">重新开炮</view>
+        <view class="text-brand text-lg">›</view>
       </view>
     </view>
   </view>

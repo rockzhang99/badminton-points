@@ -5,7 +5,7 @@
   <view class="card detail-header">
     <view class="text-lg text-bold">{{game.name}}</view>
     <view class="flex mt-16">
-      <view class="tag-cannon mr-8">{{game.playMode}}</view>
+      <view class="tag-cannon mr-8">{{modeDisplayName}}</view>
       <view class="tag-cannon">炮重 ×{{game.cannonWeight}}</view>
     </view>
     <view class="text-xs text-hint mt-8">{{playerCount}}人 · {{totalMatches}}场</view>
@@ -76,7 +76,7 @@
       <view class="flex-center">
         <!-- A队名字 -->
         <view class="text-md text-center flex-1 match-team">
-          <view wx:for="{{item.teamANames}}" wx:key="*this" wx:for-item="aname">{{aname}}</view>
+          <view class="match-name-item" wx:for="{{item.teamANames}}" wx:key="*this" wx:for-item="aname">{{aname}}</view>
         </view>
         <!-- 比分 -->
         <view class="detail-score">
@@ -86,7 +86,7 @@
         </view>
         <!-- B队名字 -->
         <view class="text-md text-center flex-1 match-team">
-          <view wx:for="{{item.teamBNames}}" wx:key="*this" wx:for-item="bname">{{bname}}</view>
+          <view class="match-name-item" wx:for="{{item.teamBNames}}" wx:key="*this" wx:for-item="bname">{{bname}}</view>
         </view>
       </view>
       <view class="text-xs text-hint text-center mt-8" wx:if="{{item.cannonEvents.length}}">

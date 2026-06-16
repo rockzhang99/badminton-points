@@ -63,6 +63,15 @@
   flex-shrink: 0;
 }
 
+.rank-avatar-default {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
 .rank-score {
   text-align: right;
   flex-shrink: 0;

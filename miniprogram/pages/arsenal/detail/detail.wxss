@@ -136,7 +136,16 @@
   padding: 24rpx;
   box-shadow: var(--shadow-sm);
 }
-.match-team { word-break: break-all; }
+.match-team {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8rpx;
+}
+.match-name-item {
+  font-size: 28rpx;
+}
 .detail-score { padding: 0 20rpx; }
 
 /* 说明卡片 */

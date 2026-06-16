@@ -136,11 +136,12 @@ Page({
       })
       .catch(err => {
         console.error('保存比赛失败，使用本地缓存', err);
+        const localId = `local_${Date.now()}`;
         const cached = wx.getStorageSync('games') || [];
-        cached.unshift({ ...gameRecord, _id: `local_${Date.now()}` });
+        cached.unshift({ ...gameRecord, _id: localId });
         wx.setStorageSync('games', cached.slice(0, 50));
         wx.setStorageSync('recentGames', cached.slice(0, 5));
-        this.setData({ saved: true });
+        this.setData({ saved: true, gameId: localId });
       });
   },
 

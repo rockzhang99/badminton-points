@@ -12,18 +12,13 @@
       bindtap="onViewDetail"
     >
       <view class="flex-1">
-        <view class="text-md text-bold">{{item.name}}</view>
+        <view class="text-md text-bold">{{item.name}} <text class="text-sm text-hint text-normal" wx:if="{{item.timeShort}}">{{item.timeShort}}</text></view>
         <view class="flex mt-8">
-          <view class="tag-cannon mr-8">{{item.playMode}}</view>
+          <view class="tag-cannon mr-8">{{item.playModeName || item.playMode}}</view>
           <view class="text-xs text-hint">{{item.players.length}}人</view>
         </view>
       </view>
-      <view class="flex">
-        <view class="btn-secondary text-xs p-16 mr-8" data-game="{{item}}" catchtap="onReplay">
-          重新开炮
-        </view>
-        <view class="text-brand text-lg">›</view>
-      </view>
+      <view class="text-brand text-lg">›</view>
     </view>
 
     <view class="empty-state" wx:if="{{games.length === 0 && !loading}}">

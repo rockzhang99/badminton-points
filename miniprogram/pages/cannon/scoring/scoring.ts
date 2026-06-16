@@ -1,5 +1,5 @@
 // pages/cannon/scoring/scoring.ts
-import { Match, CannonEvent } from '../../../types/index';
+import { Match } from '../../../types/index';
 import { calcMatchScores } from '../../../utils/score-engine';
 
 interface GameData {
@@ -22,8 +22,6 @@ Page({
 
     // 当前场地
     currentCourt: 0,
-    showCannonPanel: false,
-    cannonFromMember: '',   // 谁在开炮
 
     // 进度
     finishedCount: 0,
@@ -63,7 +61,7 @@ Page({
       scoreB: m.scoreB || 0,
       winner: m.winner || '',
       status: m.status || 'pending',
-      cannonEvents: m.cannonEvents || []
+      cannonEvents: []
     }));
 
     const totalCount = matches.filter(m => m.teamA.length > 0 && m.teamB.length > 0).length;
@@ -237,70 +235,6 @@ Page({
     this.updateProgress();
   },
 
-  /** 显示开炮面板 */
-  onShowCannon() {
-    const idx = this.data.currentCourt;
-    const match = this.data.matches[idx];
-    if (match.status === 'finished') {
-      wx.showToast({ title: '本局已结束，不能再开炮', icon: 'none' });
-      return;
-    }
-
-    // 判断谁是胜方（当前领先者）
-    const winningTeam = match.scoreA > match.scoreB ? 'A' : match.scoreB > match.scoreA ? 'B' : '';
-    if (!winningTeam) {
-      wx.showToast({ title: '先打出分差再来开炮吧', icon: 'none' });
-      return;
-    }
-
-    // 从胜方选 MVP：暂时选中胜方首个队员
-    const candidates = winningTeam === 'A' ? match.teamA : match.teamB;
-
-    this.setData({
-      showCannonPanel: true,
-      cannonFromMember: candidates[0],
-      _cannonTargets: (winningTeam === 'A' ? match.teamB : match.teamA),
-      _currentMatchIdx: idx
-    });
-  },
-
-  /** 关闭开炮面板 */
-  onCloseCannon() {
-    this.setData({ showCannonPanel: false });
-  },
-
-  /** 选中被炮者 */
-  onSelectTarget(e: any) {
-    const targetId = e.currentTarget.dataset.id;
-    const idx = this.data._currentMatchIdx as number;
-    const matches = [...this.data.matches];
-    const match = { ...matches[idx] };
-
-    const event: CannonEvent = {
-      from: this.data.cannonFromMember,
-      to: targetId
-    };
-
-    match.cannonEvents = [...match.cannonEvents, event];
-    matches[idx] = match;
-    this.setData({ matches, showCannonPanel: false });
-
-    // 炮声反馈
-    if (this.data.soundEnabled) {
-      const audio = wx.createInnerAudioContext();
-      audio.src = '/static/audio/cannon-fire.mp3';
-      audio.play();
-    }
-
-    const targetName = this.getMemberName(targetId);
-    const fromName = this.getMemberName(this.data.cannonFromMember);
-    wx.showToast({
-      title: `${targetName} 挨了 ${fromName} 一炮！`,
-      icon: 'none',
-      duration: 2000
-    });
-  },
-
   /** 更新进度 */
   updateProgress() {
     const finished = this.data.matches.filter(m => m.status === 'finished').length;
@@ -353,6 +287,4 @@ Page({
     wx.redirectTo({ url: '/pages/cannon/result/result' });
   },
 
-  /** 阻止冒泡 */
-  noop() {}
 });

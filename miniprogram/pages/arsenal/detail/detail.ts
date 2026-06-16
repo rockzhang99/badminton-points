@@ -1,5 +1,13 @@
 // pages/arsenal/detail/detail.ts
 import { Game, Match } from '../../../types/index';
+import { PLAY_MODES } from '../../../utils/play-modes';
+
+/** 根据 mode ID 获取可读名称 */
+function getModeName(modeId?: string): string {
+  if (!modeId) return '';
+  const found = PLAY_MODES.find(m => m.mode === modeId);
+  return found ? found.name : modeId;
+}
 
 interface ScoreEntry {
   memberId: string;
@@ -15,6 +23,7 @@ interface ScoreEntry {
 Page({
   data: {
     game: null as any,
+    modeDisplayName: '',
     scoreEntries: [] as ScoreEntry[],
     activeTab: 'rank' as 'rank' | 'matches',
     playerCount: 0,
@@ -150,7 +159,8 @@ Page({
       scoreEntries: entries,
       matchesWithNames,
       playerCount: playerIds.length,
-      totalMatches: finishedMatches.length
+      totalMatches: finishedMatches.length,
+      modeDisplayName: getModeName(game.playMode)
     });
   },
 
