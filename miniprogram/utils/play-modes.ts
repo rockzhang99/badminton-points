@@ -7,9 +7,9 @@ export const PLAY_MODES: PlayModeConfig[] = [
     mode: 'cannon_rotation_8',
     name: '炮轮八人转',
     nameEn: 'Cannon Rotation 8',
-    desc: '八人转，但每打完一局负方"挨炮"换位，胜方"连炮"守擂',
-    descShort: '公平挨炮换位',
-    minPlayers: 8,
+    desc: '4-8人轮转，每人与其他选手各搭档1次',
+    descShort: '轮转搭档赛',
+    minPlayers: 4,
     maxPlayers: 8,
     icon: '🎯'
   },

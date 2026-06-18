@@ -20,7 +20,7 @@ function shuffle<T>(arr: T[]): T[] {
 export function generateMatches(mode: PlayMode, players: string[]): Match[] {
   switch (mode) {
     case 'cannon_rotation_8':
-      return generateCannonRotation8(players);
+      return generateCannonRotation(players);
     case 'blind_cannon':
       return generateBlindCannon(players);
     case 'one_shot':
@@ -37,45 +37,100 @@ export function generateMatches(mode: PlayMode, players: string[]): Match[] {
 }
 
 /**
- * 炮轮八人转（8人）
- * 圆桌算法：固定1号位，其余顺时针轮转，共7轮14场
+ * 炮轮八人转（4-8人）
+ * 轮转搭档赛：每人与其他选手各搭档1次
+ * 4人：3场，每人3场
+ * 5人：5场，每人4场
+ * 6人：6场，每人4场
+ * 7人：14场，每人8场
+ * 8人：14场，每人7场
  */
-export function generateCannonRotation8(players: string[]): Match[] {
-  if (players.length !== 8) {
-    throw new Error('炮轮八人转需要恰好 8 名队员');
+export function generateCannonRotation(players: string[]): Match[] {
+  const n = players.length;
+  if (n < 4 || n > 8) {
+    throw new Error('炮轮八人转需要 4-8 名队员');
   }
 
-  const fixed = players[0];
-  const rotating = [...players.slice(1)];
-  const matches: Match[] = [];
+  const pairKey = (a: number, b: number) => `${Math.min(a, b)}-${Math.max(a, b)}`;
+  const isDisjoint = (a: [number, number], b: [number, number]) =>
+    a[0] !== b[0] && a[0] !== b[1] && a[1] !== b[0] && a[1] !== b[1];
 
-  for (let round = 0; round < 7; round++) {
-    const order = [fixed, ...rotating];
-    // 配对: (1,8)(2,7)(3,6)(4,5) - 2场，每场4人
-    const pairs: [string[], string[]][] = [
-      [[order[0], order[7]], [order[1], order[6]]],
-      [[order[2], order[5]], [order[3], order[4]]]
-    ];
-
-    pairs.forEach(([teamA, teamB], courtIndex) => {
-      matches.push({
-        round: round + 1,
-        court: courtIndex + 1,
-        teamA: [...teamA],
-        teamB: [...teamB],
-        scoreA: 0,
-        scoreB: 0,
-        winner: '',
-        status: 'pending',
-        cannonEvents: []
-      });
-    });
-
-    // 顺时针旋转
-    rotating.unshift(rotating.pop()!);
+  // 所有唯一搭档对
+  const allPairs: [number, number][] = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      allPairs.push([i, j]);
+    }
   }
 
-  return matches;
+  // 所有合法对阵候选（两个不相交的搭档对）
+  const candidates: { a: [number, number]; b: [number, number] }[] = [];
+  for (let i = 0; i < allPairs.length; i++) {
+    for (let j = i + 1; j < allPairs.length; j++) {
+      if (isDisjoint(allPairs[i], allPairs[j])) {
+        candidates.push({ a: allPairs[i], b: allPairs[j] });
+      }
+    }
+  }
+
+  // 各人数对应的场数
+  const TARGET: Record<number, number> = { 4: 3, 5: 5, 6: 6, 7: 14, 8: 14 };
+  const target = TARGET[n];
+
+  const pairUsed: Record<string, number> = {};
+  const playerMatches: number[] = new Array(n).fill(0);
+  const selected: boolean[] = new Array(candidates.length).fill(false);
+  const matches: { a: [number, number]; b: [number, number] }[] = [];
+
+  while (matches.length < target) {
+    let bestIdx = -1;
+    let bestScore = Infinity;
+
+    for (let i = 0; i < candidates.length; i++) {
+      if (selected[i]) continue;
+      const c = candidates[i];
+      const ka = pairKey(c.a[0], c.a[1]);
+      const kb = pairKey(c.b[0], c.b[1]);
+      const pairScore = (pairUsed[ka] || 0) + (pairUsed[kb] || 0);
+      const maxPlayer = Math.max(
+        playerMatches[c.a[0]], playerMatches[c.a[1]],
+        playerMatches[c.b[0]], playerMatches[c.b[1]]
+      );
+      const sumPlayer = playerMatches[c.a[0]] + playerMatches[c.a[1]] +
+                        playerMatches[c.b[0]] + playerMatches[c.b[1]];
+      // 优先使用未搭档过的组合，其次平衡每人场数
+      const score = pairScore * 1000 + maxPlayer * 100 + sumPlayer;
+
+      if (score < bestScore) {
+        bestScore = score;
+        bestIdx = i;
+      }
+    }
+
+    if (bestIdx === -1) break;
+
+    const c = candidates[bestIdx];
+    selected[bestIdx] = true;
+    matches.push({ a: c.a, b: c.b });
+    pairUsed[pairKey(c.a[0], c.a[1])] = (pairUsed[pairKey(c.a[0], c.a[1])] || 0) + 1;
+    pairUsed[pairKey(c.b[0], c.b[1])] = (pairUsed[pairKey(c.b[0], c.b[1])] || 0) + 1;
+    playerMatches[c.a[0]]++;
+    playerMatches[c.a[1]]++;
+    playerMatches[c.b[0]]++;
+    playerMatches[c.b[1]]++;
+  }
+
+  return matches.map((m, i) => ({
+    round: i + 1,
+    court: 1,
+    teamA: [players[m.a[0]], players[m.a[1]]],
+    teamB: [players[m.b[0]], players[m.b[1]]],
+    scoreA: 0,
+    scoreB: 0,
+    winner: '',
+    status: 'pending',
+    cannonEvents: []
+  }));
 }
 
 /**
@@ -245,8 +300,16 @@ export function getMatchPreview(mode: PlayMode, playerCount: number): {
   matchesPerPlayer: number;
 } {
   switch (mode) {
-    case 'cannon_rotation_8':
-      return { totalRounds: 7, totalMatches: 14, matchesPerPlayer: 7 };
+    case 'cannon_rotation_8': {
+      const PREVIEW: Record<number, { totalRounds: number; totalMatches: number; matchesPerPlayer: number }> = {
+        4: { totalRounds: 3, totalMatches: 3, matchesPerPlayer: 3 },
+        5: { totalRounds: 5, totalMatches: 5, matchesPerPlayer: 4 },
+        6: { totalRounds: 6, totalMatches: 6, matchesPerPlayer: 4 },
+        7: { totalRounds: 14, totalMatches: 14, matchesPerPlayer: 8 },
+        8: { totalRounds: 7, totalMatches: 14, matchesPerPlayer: 7 }
+      };
+      return PREVIEW[playerCount] || { totalRounds: 0, totalMatches: 0, matchesPerPlayer: 0 };
+    }
     case 'blind_cannon':
       return {
         totalRounds: ((playerCount / 2) * (playerCount / 2 - 1)) / 2,

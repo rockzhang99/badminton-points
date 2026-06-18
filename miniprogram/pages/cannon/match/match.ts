@@ -13,19 +13,15 @@ Page({
   data: {
     mode: '' as PlayMode,
     gameName: '',
-    cannonWeight: 1.0,
     playerIds: [] as string[],
     members: [] as any[],
     matches: [] as Match[],
-    preview: { totalRounds: 0, totalMatches: 0, matchesPerPlayer: 0 },
-    soundEnabled: true
+    preview: { totalRounds: 0, totalMatches: 0, matchesPerPlayer: 0 }
   },
 
   onLoad(options: any) {
     const mode = options.mode as PlayMode;
     const name = decodeURIComponent(options.name || '');
-    const weight = parseFloat(options.weight) || 1.0;
-    const sound = options.sound === '1';
 
     // 解析选手数据：新格式为 JSON 编码的 {id, nickname}[] 数组
     let players: TempPlayer[] = [];
@@ -49,10 +45,7 @@ Page({
       avatarUrl: ''
     }));
 
-    this.setData({
-      mode, gameName: name, cannonWeight: weight,
-      playerIds, members, soundEnabled: sound
-    });
+    this.setData({ mode, gameName: name, playerIds, members });
 
     this.generateMatches(mode, playerIds);
   },
@@ -88,11 +81,10 @@ Page({
     const gameData = {
       mode: this.data.mode,
       name: this.data.gameName,
-      cannonWeight: this.data.cannonWeight,
+      cannonWeight: 1.0,
       matches: this.data.matches,
       players: this.data.playerIds,
-      members: this.data.members,
-      soundEnabled: this.data.soundEnabled
+      members: this.data.members
     };
 
     // 存储到全局数据

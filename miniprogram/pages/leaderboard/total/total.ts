@@ -61,8 +61,8 @@ Page({
   computeLocalRanking(dimension: string, games: any[]) {
     const memberScores: Record<string, { score: number; games: number; wins: number }> = {};
 
-    // 先从所有比赛收集 ID -> 昵称 映射
-    const nameInfoMap = new Map<string, { nickname: string; avatarUrl: string }>();
+    // 先从所有比赛收集 ID -> {昵称, 头像, 性别} 映射
+    const nameInfoMap = new Map<string, { nickname: string; avatarUrl: string; gender: number }>();
 
     games.forEach((game: any) => {
       const details = game.playerDetails || [];
@@ -70,7 +70,8 @@ Page({
         if (p._id && !nameInfoMap.has(p._id)) {
           nameInfoMap.set(p._id, {
             nickname: p.nickname || '',
-            avatarUrl: p.avatarUrl || ''
+            avatarUrl: p.avatarUrl || '',
+            gender: p.gender ?? 1
           });
         }
       }
@@ -107,6 +108,7 @@ Page({
           memberId: mid,
           nickname: info.nickname || mid.slice(0, 6),
           avatarUrl: info.avatarUrl || '',
+          gender: info.gender ?? 1,
           score: data.score,
           rank: 0,
           gamesPlayed: data.games,

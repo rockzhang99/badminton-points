@@ -4,11 +4,14 @@ import { Member } from '../types/index';
 
 /**
  * 费用均摊公式：
- * 个人应付 = (场地费 + 球费 + 其他费) / 人数 - 女生减免
+ *
+ * 【立减模式】个人应付 = (场地费 + 球费 + 其他费) / 人数 - 女生立减
+ * 【固定球费模式】个人应付 = 场地费/人数 + 球费份额 + 其他费/人数
+ *   - 女生球费份额 = 固定球费金额
+ *   - 男生球费份额 = (总球费 - 女生固定总额) / 男生人数
+ *   - 场地费和其他费始终全员均摊
  *
  * 所有费用人均分摊，不按炮分加权。
- * - 女生减免 = min(5元, 个人应付)（可配置）
- * - 最终应付 = max(0, 个人应付 - 女生减免)
  */
 
 export interface BillingParams {
@@ -35,6 +38,8 @@ export interface BillingResult {
   totalBill: number;
   totalCollected: number;
   exemptedMembers: string[];  // 被炮哥请客的队员
+  /** 固定球费模式下的校验警告 */
+  warning?: string;
 }
 
 /**
@@ -48,7 +53,12 @@ export function calcBilling(params: BillingParams): BillingResult {
     return { details: {}, totalBill: 0, totalCollected: 0, exemptedMembers: [] };
   }
 
-  // 人均分摊：所有费用均分
+  // ===== 固定球费模式：场地费始终全员均摊，只对球费部分做固定/差额分摊 =====
+  if (femaleMode === 'fixed' && femaleFixedShuttle > 0) {
+    return calcFixedBilling(params, playerCount);
+  }
+
+  // ===== 立减模式：所有费用均摊后减去立减金额 =====
   const equalShare = (courtFee + shuttleFee + otherFee) / playerCount;
 
   const details: BillingResult['details'] = {};
@@ -58,13 +68,8 @@ export function calcBilling(params: BillingParams): BillingResult {
     const member = members.find(m => m._id === mid);
     const isFemale = member?.gender === 2;
 
-    let discount: number = 0; // 减免额
-
-    if (isFemale && femaleMode === 'fixed' && femaleFixedShuttle > 0) {
-      // 固定球费模式：女生只付固定金额
-      discount = equalShare - femaleFixedShuttle;
-    } else if (isFemale && femaleMode === 'deduct') {
-      // 立减模式：从总应付中扣除固定金额
+    let discount: number = 0;
+    if (isFemale) {
       discount = Math.min(femaleDiscount, equalShare);
     }
 
@@ -86,12 +91,88 @@ export function calcBilling(params: BillingParams): BillingResult {
 
   const totalBill = courtFee + shuttleFee + otherFee;
 
-  // 女生减免的金额直接不收，不再摊到最后一个人身上
-  // totalCollected 可能小于 totalBill
-
   return {
     details,
     totalBill,
+    totalCollected,
+    exemptedMembers: []
+  };
+}
+
+/**
+ * 固定球费模式计算：
+ * - 场地费：全员均摊（女生也要付）
+ * - 球费：女生付固定金额，男生分担剩余球费
+ * - 其他费：全员均摊
+ *
+ * 校验规则：如果人均球费 <= 固定球费金额，返回 warning 阻止分摊
+ */
+function calcFixedBilling(params: BillingParams, playerCount: number): BillingResult {
+  const { courtFee, shuttleFee, otherFee, femaleFixedShuttle, cannonScores, members } = params;
+
+  const courtPerPerson = courtFee / playerCount;
+  const otherPerPerson = otherFee / playerCount;
+  const avgShuttlePerPerson = shuttleFee / playerCount;
+
+  // 校验：人均球费不能小于等于固定球费，否则男生需要倒贴
+  if (avgShuttlePerPerson <= femaleFixedShuttle && shuttleFee > 0) {
+    return {
+      details: {},
+      totalBill: courtFee + shuttleFee + otherFee,
+      totalCollected: 0,
+      exemptedMembers: [],
+      warning: `人均球费 ¥${avgShuttlePerPerson.toFixed(2)} 小于等于固定球费 ¥${femaleFixedShuttle}，请检查费用或调整固定金额`
+    };
+  }
+
+  // 统计男女人数
+  let femaleCount = 0;
+  let maleCount = 0;
+  const genderMap: Record<string, boolean> = {};
+
+  for (const [mid] of Object.entries(cannonScores)) {
+    const member = members.find(m => m._id === mid);
+    const isFemale = member?.gender === 2;
+    genderMap[mid] = !!isFemale;
+    if (isFemale) femaleCount++;
+    else maleCount++;
+  }
+
+  // 女生固定球费总额
+  const femaleTotalFixed = femaleFixedShuttle * femaleCount;
+  // 剩余球费由男生分担
+  const remainingShuttle = Math.max(0, shuttleFee - femaleTotalFixed);
+  const maleShuttleShare = maleCount > 0 ? remainingShuttle / maleCount : 0;
+
+  const details: BillingResult['details'] = {};
+  let totalCollected = 0;
+
+  for (const [mid] of Object.entries(cannonScores)) {
+    const isFemale = genderMap[mid];
+    const scoreShare = isFemale ? femaleFixedShuttle : maleShuttleShare;
+
+    const totalBefore = +(courtPerPerson + scoreShare + otherPerPerson).toFixed(2);
+    const discount = isFemale ? +(totalBefore - (courtPerPerson + femaleFixedShuttle + otherPerPerson)).toFixed(2) : 0;
+    const finalAmount = isFemale
+      ? +(courtPerPerson + femaleFixedShuttle + otherPerPerson).toFixed(2)
+      : +(courtPerPerson + maleShuttleShare + otherPerPerson).toFixed(2);
+
+    details[mid] = {
+      courtShare: +courtPerPerson.toFixed(2),
+      scoreShare: +scoreShare.toFixed(2),
+      otherShare: +otherPerPerson.toFixed(2),
+      totalBeforeDiscount: totalBefore,
+      discount: +discount.toFixed(2),
+      finalAmount: +Math.max(0, finalAmount).toFixed(2),
+      isFemale
+    };
+
+    totalCollected += finalAmount;
+  }
+
+  return {
+    details,
+    totalBill: courtFee + shuttleFee + otherFee,
     totalCollected,
     exemptedMembers: []
   };

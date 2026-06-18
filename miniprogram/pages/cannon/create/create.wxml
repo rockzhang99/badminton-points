@@ -27,27 +27,6 @@
     />
   </view>
 
-  <!-- 炮重系数 -->
-  <view class="card">
-    <view class="flex-between mb-24">
-      <view class="form-label">炮重系数</view>
-      <view class="text-brand text-lg text-bold">×{{cannonWeight}}</view>
-    </view>
-    <slider
-      min="0"
-      max="3"
-      value="{{cannonWeightIndex}}"
-      step="1"
-      activeColor="#00754A"
-      backgroundColor="#E5E7EB"
-      block-size="20"
-      bindchange="onCannonWeightChange"
-    />
-    <view class="flex-between mt-8">
-      <text class="text-xs text-hint" wx:for="{{[0.5, 1.0, 1.5, 2.0]}}" wx:key="*this">{{item}}x</text>
-    </view>
-  </view>
-
   <!-- 输入选手昵称 -->
   <view class="card">
     <view class="flex mb-24">
@@ -125,14 +104,15 @@
     </view>
   </view>
 
-  <!-- 炮声反馈开关 -->
-  <view class="card flex-between">
-    <view class="form-label">炮声反馈</view>
-    <switch
-      checked="{{soundEnabled}}"
-      color="#00754A"
-      bindchange="onSoundToggle"
-    />
+  <!-- 比赛规则 -->
+  <view class="card" wx:if="{{playModeRules.length > 0}}">
+    <view class="form-label">📋 比赛规则</view>
+    <view class="rules-list">
+      <view class="rule-item" wx:for="{{playModeRules}}" wx:key="index">
+        <text class="rule-dot">•</text>
+        <text class="rule-text">{{item}}</text>
+      </view>
+    </view>
   </view>
 
   <!-- 开炮按钮 -->

@@ -85,3 +85,11 @@
   text-align: center;
   color: var(--color-text-hint);
 }
+
+/* 性别图标 */
+.gender-icon {
+  font-size: 24rpx;
+  flex-shrink: 0;
+}
+.gender-icon-female { color: #EC4899; }
+.gender-icon-male { color: #3B82F6; }

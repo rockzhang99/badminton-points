@@ -118,6 +118,7 @@ export interface RankItem {
   memberId: string;
   nickname: string;
   avatarUrl: string;
+  gender?: number;       // 1=男 2=女
   score: number;
   rank: number;
   gamesPlayed: number;

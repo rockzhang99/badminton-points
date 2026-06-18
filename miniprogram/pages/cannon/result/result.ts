@@ -9,7 +9,6 @@ interface GameData {
   players: string[];
   members: any[];
   mode: string;
-  soundEnabled: boolean;
 }
 
 Page({

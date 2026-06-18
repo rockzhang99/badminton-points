@@ -1,6 +1,7 @@
 // pages/cannon/create/create.ts
 import { PlayModeConfig, PlayMode } from '../../../types/index';
 import { PLAY_MODES } from '../../../utils/play-modes';
+import { getMatchPreview } from '../../../utils/match-engine';
 
 /** 临时选手（建局时使用，非数据库Member） */
 interface Player {
@@ -17,10 +18,6 @@ Page({
 
     // 表单
     gameName: '',
-    cannonWeight: 1.0,
-    weaponValues: ['友谊赛 0.5', '常规局 1.0', '内战 1.5', '生死局 2.0'],
-    cannonWeightIndex: 1,
-    soundEnabled: true,
 
     // 选手（本地临时数据，非炮库）
     players: [] as Player[],
@@ -33,6 +30,9 @@ Page({
     // 统计
     matchCountPerPlayer: 0,
     totalMatches: 0,
+
+    // 玩法说明
+    playModeRules: [] as string[],
 
     // 状态
     isReplay: false,
@@ -50,6 +50,8 @@ Page({
       this.setData({ playMode: mode, playModeConfig: config });
       // 预先创建最少人数的空输入框
       this.initPlayers(config.minPlayers);
+      // 生成玩法说明
+      this.buildPlayModeRules(mode);
     }
 
     // 生成默认比赛名
@@ -398,7 +400,6 @@ Page({
     db.collection('games').doc(gameId).get().then((res: any) => {
       const game = res.data as any;
       this.setData({
-        cannonWeight: game.cannonWeight,
         gameName: `${game.name}（复刻）`
       });
       // 重赛时恢复选手名称（从game的playerDetails或players字段）
@@ -419,18 +420,41 @@ Page({
     this.setData({ gameName: e.detail.value });
   },
 
-  /** 调整炮重 */
-  onCannonWeightChange(e: any) {
-    const weights = [0.5, 1.0, 1.5, 2.0];
-    this.setData({
-      cannonWeightIndex: e.detail.value,
-      cannonWeight: weights[e.detail.value]
-    });
-  },
-
-  /** 切换炮声 */
-  onSoundToggle(e: any) {
-    this.setData({ soundEnabled: e.detail.value });
+  /** 生成玩法说明 */
+  buildPlayModeRules(mode: PlayMode) {
+    const rules: string[] = [];
+    switch (mode) {
+      case 'cannon_rotation_8':
+        rules.push('每人与其他选手各搭档1次');
+        rules.push('5人：每人4场，共5场');
+        rules.push('6人：每人4场，共6场');
+        rules.push('7人：每人8场，共14场');
+        rules.push('8人：每人7场，共14场');
+        break;
+      case 'blind_cannon':
+        rules.push('随机搭档，每轮重新抽签配对');
+        rules.push('搭档关系未知，考验临场应变');
+        break;
+      case 'one_shot':
+        rules.push('单淘汰赛，一场定胜负');
+        rules.push('输了就下场，赢者继续守擂');
+        break;
+      case 'bombardment':
+        rules.push('循环赛制，每两人各对决一次');
+        rules.push('按总胜场排名，公平竞技');
+        break;
+      case 'five_feather':
+        rules.push('5人特殊轮转，每轮1人轮空');
+        rules.push('其余4人进行双打对战');
+        break;
+      case 'free_cannon':
+        rules.push('自由模式，现场灵活组队');
+        rules.push('支持添加/删除对阵，随心开炮');
+        break;
+      default:
+        break;
+    }
+    this.setData({ playModeRules: rules });
   },
 
   /** 检查是否可以开始 */
@@ -447,14 +471,9 @@ Page({
     let matchCountPerPlayer = 0;
     let totalMatches = 0;
     if (canStart && config) {
-      const n = validCount;
-      switch (true) {
-        case n <= 2: matchCountPerPlayer = 1; break;
-        case n <= 4: matchCountPerPlayer = 3; break;
-        case n <= 6: matchCountPerPlayer = 4; break;
-        default: matchCountPerPlayer = n - 1; break;
-      }
-      totalMatches = Math.floor((n * matchCountPerPlayer) / 2);
+      const preview = getMatchPreview(this.data.playMode, validCount);
+      matchCountPerPlayer = preview.matchesPerPlayer;
+      totalMatches = preview.totalMatches;
     }
 
     this.setData({ canStart, matchCountPerPlayer, totalMatches });
@@ -473,7 +492,7 @@ Page({
 
     // 把选手信息编码为JSON传到对阵页
     const playerData = encodeURIComponent(JSON.stringify(validPlayers));
-    const query = `mode=${this.data.playMode}&name=${encodeURIComponent(this.data.gameName)}&weight=${this.data.cannonWeight}&players=${playerData}&sound=${this.data.soundEnabled ? 1 : 0}`;
+    const query = `mode=${this.data.playMode}&name=${encodeURIComponent(this.data.gameName)}&players=${playerData}`;
 
     wx.navigateTo({
       url: `/pages/cannon/match/match?${query}`

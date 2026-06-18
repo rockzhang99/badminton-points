@@ -9,7 +9,6 @@ interface GameData {
   matches: Match[];
   players: string[];
   members: any[];
-  soundEnabled: boolean;
 }
 
 Page({
@@ -18,7 +17,6 @@ Page({
     cannonWeight: 1.0,
     matches: [] as Match[],
     members: [] as any[],
-    soundEnabled: true,
 
     // 当前场地
     currentCourt: 0,
@@ -71,7 +69,6 @@ Page({
       cannonWeight: gameData.cannonWeight,
       matches,
       members: gameData.members,
-      soundEnabled: gameData.soundEnabled,
       totalCount,
       finishedCount: matches.filter(m => m.status === 'finished').length
     });
@@ -280,8 +277,7 @@ Page({
         return acc;
       }, [] as string[]),
       members: this.data.members,
-      mode: (app.globalData.currentGame as GameData)?.mode || 'free_cannon',
-      soundEnabled: this.data.soundEnabled
+      mode: (app.globalData.currentGame as GameData)?.mode || 'free_cannon'
     };
 
     wx.redirectTo({ url: '/pages/cannon/result/result' });

@@ -46,7 +46,7 @@
 
       <!-- 信息 -->
       <view class="flex-1 ml-16">
-        <view class="text-md text-bold">{{item.nickname}}</view>
+        <view class="text-md text-bold">{{item.nickname}}<text class="gender-icon {{item.gender === 2 ? 'gender-icon-female' : 'gender-icon-male'}}" wx:if="{{item.gender}}">{{item.gender === 2 ? '♀' : '♂'}}</text></view>
         <view class="text-xs text-hint mt-4">
           {{item.gamesPlayed}}场 · 胜率{{item.winRate}}%
         </view>

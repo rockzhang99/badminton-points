@@ -5,8 +5,7 @@
   <view class="card detail-header">
     <view class="text-lg text-bold">{{game.name}}</view>
     <view class="flex mt-16">
-      <view class="tag-cannon mr-8">{{modeDisplayName}}</view>
-      <view class="tag-cannon">炮重 ×{{game.cannonWeight}}</view>
+      <view class="tag-cannon">{{modeDisplayName}}</view>
     </view>
     <view class="text-xs text-hint mt-8">{{playerCount}}人 · {{totalMatches}}场</view>
   </view>
@@ -54,6 +53,7 @@
               mode="aspectFill"
             />
             <text>{{item.name}}</text>
+            <text class="gender-icon {{item.gender === 2 ? 'gender-icon-female' : 'gender-icon-male'}}">{{item.gender === 2 ? '♀' : '♂'}}</text>
           </view>
         </view>
         <!-- 胜-负 -->
@@ -76,7 +76,10 @@
       <view class="flex-center">
         <!-- A队名字 -->
         <view class="text-md text-center flex-1 match-team">
-          <view class="match-name-item" wx:for="{{item.teamANames}}" wx:key="*this" wx:for-item="aname">{{aname}}</view>
+          <view class="match-name-item" wx:for="{{item.teamANames}}" wx:key="name" wx:for-item="aname">
+            {{aname.name}}
+            <text class="gender-icon {{aname.gender === 2 ? 'gender-icon-female' : 'gender-icon-male'}}">{{aname.gender === 2 ? '♀' : '♂'}}</text>
+          </view>
         </view>
         <!-- 比分 -->
         <view class="detail-score">
@@ -86,7 +89,10 @@
         </view>
         <!-- B队名字 -->
         <view class="text-md text-center flex-1 match-team">
-          <view class="match-name-item" wx:for="{{item.teamBNames}}" wx:key="*this" wx:for-item="bname">{{bname}}</view>
+          <view class="match-name-item" wx:for="{{item.teamBNames}}" wx:key="name" wx:for-item="bname">
+            {{bname.name}}
+            <text class="gender-icon {{bname.gender === 2 ? 'gender-icon-female' : 'gender-icon-male'}}">{{bname.gender === 2 ? '♀' : '♂'}}</text>
+          </view>
         </view>
       </view>
       <view class="text-xs text-hint text-center mt-8" wx:if="{{item.cannonEvents.length}}">
@@ -101,11 +107,11 @@
       <view class="explain-title text-bold">📊 计分规则说明</view>
       <view class="explain-item" wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
         <view class="explain-dot"></view>
-        <text class="text-sm text-secondary" wx:if="{{item === 1}}">炮分 = 基础分 × 炮重系数 × 胜负系数 - 挨炮惩罚</text>
+        <text class="text-sm text-secondary" wx:if="{{item === 1}}">炮分 = 基础分 × 炮重系数 × 胜负系数 - 炮击惩罚</text>
         <text class="text-sm text-secondary" wx:if="{{item === 2}}">胜场越多，炮分越高；被炮击越多次，扣分越多</text>
         <text class="text-sm text-secondary" wx:if="{{item === 3}}">净胜分 = 所有场次（己方得分 - 对方得分）之和</text>
         <text class="text-sm text-secondary" wx:if="{{item === 4}}">排名按炮分从高到低排序</text>
-        <text class="text-sm text-secondary" wx:if="{{item === 5}}">炮重系数越高，本场得分波动越大</text>
+        <text class="text-sm text-secondary" wx:if="{{item === 5}}">排名按炮分从高到低排序，炮分越高越强</text>
       </view>
     </view>
   </block>

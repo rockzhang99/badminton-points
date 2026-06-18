@@ -7,7 +7,6 @@
   <view class="card game-header">
     <view class="text-lg text-bold">{{gameName}}</view>
     <view class="flex mt-16">
-      <view class="tag-cannon mr-8">炮重 ×{{cannonWeight}}</view>
       <view class="tag-cannon">{{preview.totalRounds}}轮 {{preview.totalMatches}}场</view>
     </view>
   </view>

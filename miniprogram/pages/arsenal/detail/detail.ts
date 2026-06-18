@@ -13,11 +13,18 @@ interface ScoreEntry {
   memberId: string;
   name: string;
   avatar: string;
+  gender: number;       // 1=男 2=女
   wins: number;
   losses: number;
   netScore: number;   // 胜分 - 负分
   cannonScore: number; // 炮分
   rank: number;
+}
+
+/** 带性别的选手名 */
+interface PlayerNameInfo {
+  name: string;
+  gender: number;
 }
 
 Page({
@@ -50,14 +57,14 @@ Page({
     }
   },
 
-  /** 构建 ID -> 昵称 映射 */
-  buildNameMap(game: any): Record<string, { nickname: string; avatarUrl: string }> {
-    const map: Record<string, { nickname: string; avatarUrl: string }> = {};
+  /** 构建 ID -> {昵称, 头像, 性别} 映射 */
+  buildNameMap(game: any): Record<string, { nickname: string; avatarUrl: string; gender: number }> {
+    const map: Record<string, { nickname: string; avatarUrl: string; gender: number }> = {};
 
     // 优先从 playerDetails 取（保存比赛时写入的）
     if (game.playerDetails && Array.isArray(game.playerDetails)) {
       for (const p of game.playerDetails) {
-        map[p._id] = { nickname: p.nickname || p._id.slice(0, 6), avatarUrl: p.avatarUrl || '' };
+        map[p._id] = { nickname: p.nickname || p._id.slice(0, 6), avatarUrl: p.avatarUrl || '', gender: p.gender ?? 1 };
       }
     }
 
@@ -65,7 +72,7 @@ Page({
     if (game.players && Array.isArray(game.players)) {
       for (const p of game.players) {
         if (typeof p === 'object' && p.id && !map[p.id]) {
-          map[p.id] = { nickname: p.nickname || p.id.slice(0, 6), avatarUrl: '' };
+          map[p.id] = { nickname: p.nickname || p.id.slice(0, 6), avatarUrl: '', gender: p.gender ?? 1 };
         }
       }
     }
@@ -73,10 +80,13 @@ Page({
     return map;
   },
 
-  /** 根据 ID 列表解析为名字字符串 */
-  resolveNames(ids: string[], nameMap: Record<string, { nickname: string; avatarUrl: string }>): string {
-    if (!ids || !ids.length) return '-';
-    return ids.map(id => nameMap[id]?.nickname || id.slice(0, 6)).join(' ');
+  /** 根据 ID 列表解析为带性别信息 */
+  resolveNamesWithGender(ids: string[], nameMap: Record<string, { nickname: string; avatarUrl: string; gender: number }>): PlayerNameInfo[] {
+    if (!ids || !ids.length) return [];
+    return ids.map(id => ({
+      name: nameMap[id]?.nickname || id.slice(0, 6),
+      gender: nameMap[id]?.gender ?? 1
+    }));
   },
 
   processGame(game: any) {
@@ -133,6 +143,7 @@ Page({
         memberId: pid,
         name: info?.nickname || pid.slice(0, 6),
         avatar: info?.avatarUrl || '',
+        gender: info?.gender ?? 1,
         wins: wl.wins,
         losses: wl.losses,
         netScore: wl.netScore,
@@ -147,11 +158,11 @@ Page({
     // 赋名次
     entries.forEach((e, i) => { e.rank = i + 1; });
 
-    // 对阵记录中补充名字（创建新的 matchesWithNames）
+    // 对阵记录中补充名字和性别（创建新的 matchesWithNames）
     const matchesWithNames = finishedMatches.map((m: Match) => ({
       ...m,
-      teamANames: this.resolveNames(m.teamA, nameMap),
-      teamBNames: this.resolveNames(m.teamB, nameMap)
+      teamANames: this.resolveNamesWithGender(m.teamA, nameMap),
+      teamBNames: this.resolveNamesWithGender(m.teamB, nameMap)
     }));
 
     this.setData({

@@ -58,7 +58,7 @@
     <view class="section-title">炮击统计</view>
     <view class="flex">
       <view class="card flex-1 text-center mr-16" wx:if="{{mostCannoned.count > 0}}">
-        <view class="text-xs text-hint mb-8">🎯 挨炮最多</view>
+        <view class="text-xs text-hint mb-8">🎯 受炮最多</view>
         <view class="text-md text-bold">{{mostCannoned.name}}</view>
         <view class="text-brand text-lg text-bold">×{{mostCannoned.count}}</view>
       </view>

@@ -156,6 +156,12 @@ Page({
       members
     });
 
+    // 固定球费模式校验：人均球费不足时阻止分摊
+    if (result.warning) {
+      wx.showToast({ title: result.warning, icon: 'none', duration: 3000 });
+      return;
+    }
+
     const details = Object.entries(result.details).map(([mid, d]: [string, any]) => {
       const m = members.find(x => x._id === mid);
       return {
