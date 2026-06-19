@@ -10,23 +10,18 @@
     <view class="text-xs text-hint mt-8">{{playerCount}}人 · {{totalMatches}}场</view>
   </view>
 
-  <!-- Tab 栏（说明 / 对阵 / 排名） -->
+  <!-- Tab 栏（排名 / 对阵） -->
   <view class="tab-bar card">
-    <view
-      class="tab-item {{activeTab === 'explain' ? 'tab-active' : ''}}"
-      data-tab="explain"
-      bindtap="onSwitchTab"
-    >说明</view>
-    <view
-      class="tab-item {{activeTab === 'matches' ? 'tab-active' : ''}}"
-      data-tab="matches"
-      bindtap="onSwitchTab"
-    >对阵</view>
     <view
       class="tab-item {{activeTab === 'rank' ? 'tab-active' : ''}}"
       data-tab="rank"
       bindtap="onSwitchTab"
     >排名</view>
+    <view
+      class="tab-item {{activeTab === 'matches' ? 'tab-active' : ''}}"
+      data-tab="matches"
+      bindtap="onSwitchTab"
+    >对阵</view>
   </view>
 
   <!-- ===== 排名 Tab（参照左图）===== -->
@@ -101,20 +96,6 @@
     </view>
   </block>
 
-  <!-- ===== 说明 Tab ===== -->
-  <block wx:if="{{activeTab === 'explain'}}">
-    <view class="card explain-card">
-      <view class="explain-title text-bold">📊 计分规则说明</view>
-      <view class="explain-item" wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
-        <view class="explain-dot"></view>
-        <text class="text-sm text-secondary" wx:if="{{item === 1}}">炮分 = 基础分 × 炮重系数 × 胜负系数 - 炮击惩罚</text>
-        <text class="text-sm text-secondary" wx:if="{{item === 2}}">胜场越多，炮分越高；被炮击越多次，扣分越多</text>
-        <text class="text-sm text-secondary" wx:if="{{item === 3}}">净胜分 = 所有场次（己方得分 - 对方得分）之和</text>
-        <text class="text-sm text-secondary" wx:if="{{item === 4}}">排名按炮分从高到低排序</text>
-        <text class="text-sm text-secondary" wx:if="{{item === 5}}">排名按炮分从高到低排序，炮分越高越强</text>
-      </view>
-    </view>
-  </block>
 
   <!-- 底部按钮 -->
   <view class="footer-bar footer-two-btns">

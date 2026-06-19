@@ -7,22 +7,22 @@
     <image class="mvp-avatar" src="{{mvp.avatar}}" mode="aspectFill" />
     <view class="mvp-name text-lg text-bold">{{mvp.name}}</view>
     <view class="mvp-score">
-      <text class="text-brand" style="font-size:56rpx;font-weight:900;">{{mvp.score}}</text>
-      <text class="text-secondary"> 炮分</text>
+      <text class="text-brand" style="font-size:56rpx;font-weight:900;">{{mvp.points}}</text>
+      <text class="text-secondary"> 总得分</text>
     </view>
     <view class="mvp-title tag-cannon">🏆 本场炮王</view>
   </view>
 
-  <!-- 炮分变化表 -->
+  <!-- 比赛结果 -->
   <view class="section">
-    <view class="section-title">炮分变化</view>
+    <view class="section-title">比赛结果</view>
     <view class="card" style="padding:0;">
       <view class="score-table">
         <view class="table-header">
           <view class="col-rank">#</view>
           <view class="col-name">队员</view>
-          <view class="col-score">炮分</view>
-          <view class="col-net">净胜</view>
+          <view class="col-score">得分</view>
+          <view class="col-net">净胜分</view>
           <view class="col-detail">战绩</view>
         </view>
         <view
@@ -41,13 +41,13 @@
             <view class="ellipsis">{{item.name}}</view>
             <text class="gender-icon {{item.gender === 2 ? 'gender-f' : ''}}">{{item.gender === 2 ? '♀' : '♂'}}</text>
           </view>
-          <view class="col-score text-bold {{item.score > 0 ? 'text-brand' : 'text-hint'}}">
-            {{item.score}}
+          <view class="col-score text-bold {{item.points > 0 ? 'text-brand' : 'text-hint'}}">
+            {{item.points}}
           </view>
-          <view class="col-net text-bold {{item.netWins > 0 ? 'text-success' : item.netWins < 0 ? 'text-danger' : 'text-hint'}}">
-            {{item.netWins > 0 ? '+' : ''}}{{item.netWins}}
+          <view class="col-net text-bold {{item.netScore > 0 ? 'text-win' : item.netScore < 0 ? 'text-lose' : 'text-hint'}}">
+            {{item.netScore > 0 ? '+' : ''}}{{item.netScore}}
           </view>
-          <view class="col-detail text-xs text-hint">{{item.change}}</view>
+          <view class="col-detail text-xs text-hint">{{item.wins}}胜{{item.losses}}负</view>
         </view>
       </view>
     </view>

@@ -80,6 +80,20 @@ Page({
     return map;
   },
 
+  /** 格式化比赛标题：追加时分秒 */
+  formatGameTitle(game: any): string {
+    const base = game.name || '';
+    if (!game.createdAt) return base;
+    try {
+      const d = new Date(game.createdAt);
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      return `${base} ${hh}:${mm}`;
+    } catch {
+      return base;
+    }
+  },
+
   /** 根据 ID 列表解析为带性别信息 */
   resolveNamesWithGender(ids: string[], nameMap: Record<string, { nickname: string; avatarUrl: string; gender: number }>): PlayerNameInfo[] {
     if (!ids || !ids.length) return [];
@@ -91,6 +105,9 @@ Page({
 
   processGame(game: any) {
     const nameMap = this.buildNameMap(game);
+
+    // 格式化标题：炮哥619局 → 炮哥619局 14:30
+    const displayName = this.formatGameTitle(game);
 
     // ---- 计算每个选手的胜负场次和净胜分 ----
     const winLossMap: Record<string, { wins: number; losses: number; netScore: number }> = {};
@@ -152,8 +169,8 @@ Page({
       });
     }
 
-    // 按炮分降序排列
-    entries.sort((a, b) => b.cannonScore - a.cannonScore);
+    // 先按胜场降序，胜场相同按净胜分降序
+    entries.sort((a, b) => (b.wins - a.wins) || (b.netScore - a.netScore));
 
     // 赋名次
     entries.forEach((e, i) => { e.rank = i + 1; });
@@ -166,7 +183,7 @@ Page({
     }));
 
     this.setData({
-      game,
+      game: { ...game, name: displayName },
       scoreEntries: entries,
       matchesWithNames,
       playerCount: playerIds.length,

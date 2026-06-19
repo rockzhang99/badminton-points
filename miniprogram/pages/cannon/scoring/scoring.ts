@@ -125,11 +125,39 @@ Page({
   /** B队 -1 */
   onMinusB() { this.updateScore('B', -1); },
 
-  /** 更新比分 */
+  /**
+   * 校验最终比分是否符合羽毛球21分制
+   * 规则：先得21分且领先2分胜，或先到30分胜
+   * 同时防止 10:22 这种不可达比分（领先方过21时对手不到20分，应在21:10时已结束）
+   */
+  isValidFinalScore(scoreA: number, scoreB: number): boolean {
+    if (scoreA === scoreB) return false;
+    const maxScore = Math.max(scoreA, scoreB);
+    const minScore = Math.min(scoreA, scoreB);
+    const gap = maxScore - minScore;
+
+    // 先到30分胜
+    if (maxScore >= 30) return true;
+
+    // 必须至少到21分
+    if (maxScore < 21) return false;
+
+    // 必须领先至少2分
+    if (gap < 2) return false;
+
+    // 如果胜方超过21分，负方必须至少20分（平分后连得2分）
+    if (maxScore > 21 && minScore < 20) return false;
+
+    return true;
+  },
+
+  /** 更新比分（只修改分数，不自动结束） */
   updateScore(team: 'A' | 'B', delta: number) {
     const idx = this.data.currentCourt;
     const matches = [...this.data.matches];
     const match = { ...matches[idx] };
+
+    if (match.status === 'finished') return;
 
     if (team === 'A') {
       match.scoreA = Math.max(0, match.scoreA + delta);
@@ -142,7 +170,7 @@ Page({
     this.setData({ matches });
   },
 
-  /** 快速比分预设 */
+  /** 快速比分预设（只赋值，不结束比赛，还可以修改） */
   onQuickScore(e: any) {
     const a = parseInt(e.currentTarget.dataset.a);
     const b = parseInt(e.currentTarget.dataset.b);
@@ -178,13 +206,22 @@ Page({
     });
   },
 
-  /** 下一场 → 自动结束当前局（判定胜负）并跳转 */
+  /** 下一场 → 校验当前局比分，符合21分制则结束并跳转 */
   onNextCourt() {
     const idx = this.data.currentCourt;
     const match = this.data.matches[idx];
 
-    // 自动结束当前局：有分差就判胜
-    if (match.scoreA !== match.scoreB && match.status !== 'finished') {
+    // 未结束的场次才需要校验
+    if (match.status !== 'finished') {
+      if (match.scoreA === match.scoreB) {
+        wx.showToast({ title: '比分相同，无法结束', icon: 'none' });
+        return;
+      }
+      // 校验是否符合21分制
+      if (!this.isValidFinalScore(match.scoreA, match.scoreB)) {
+        wx.showToast({ title: '比分不符合21分制规则（需≥21分且领先2分）', icon: 'none' });
+        return;
+      }
       this.finishCurrentMatch();
     }
 
@@ -207,8 +244,6 @@ Page({
     const idx = this.data.currentCourt;
     const matches = [...this.data.matches];
     const match = { ...matches[idx] };
-
-    if (match.scoreA === match.scoreB) return; // 平局不结束
 
     match.winner = match.scoreA > match.scoreB ? 'A' : 'B';
     match.status = 'finished';

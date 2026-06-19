@@ -11,22 +11,31 @@ interface GameData {
   mode: string;
 }
 
+/** 选手比赛得分统计 */
+interface PlayerPoints {
+  memberId: string;
+  totalScored: number;   // 本方总得分
+  totalConceded: number; // 对方总得分
+  netScore: number;      // 净胜分 = totalScored - totalConceded
+  wins: number;
+  losses: number;
+}
+
 Page({
   data: {
     gameName: '',
     cannonWeight: 1.0,
     mode: '',
 
-    // 炮分结果
-    scoreMap: {} as Record<string, number>,
-    scoreEntries: [] as { memberId: string; name: string; avatar: string; score: number; rank: number; change: string; netWins: number; gender: number }[],
+    // 比赛结果
+    scoreEntries: [] as { memberId: string; name: string; avatar: string; gender: number; points: number; netScore: number; wins: number; losses: number; rank: number }[],
 
     // 炮击统计
     mostCannoned: { name: '', count: 0 },
     mostFired: { name: '', count: 0 },
 
-    // MVP
-    mvp: { name: '', avatar: '', score: 0 } as any,
+    // MVP（按炮分）
+    mvp: { memberId: '', name: '', avatar: '', score: 0, points: 0 } as any,
 
     // 状态
     saved: false,
@@ -52,47 +61,79 @@ Page({
     this.saveGame(gd);
   },
 
+  /** 计算每位选手的比赛总得分、净胜分、胜负记录 */
+  calcPlayerPoints(finishedMatches: Match[], players: string[]): PlayerPoints[] {
+    const pointsMap: Record<string, PlayerPoints> = {};
+    for (const pid of players) {
+      pointsMap[pid] = { memberId: pid, totalScored: 0, totalConceded: 0, netScore: 0, wins: 0, losses: 0 };
+    }
+
+    for (const match of finishedMatches) {
+      // 该场所有选手都按团队比分累积
+      for (const pid of match.teamA) {
+        if (!pointsMap[pid]) continue;
+        pointsMap[pid].totalScored += match.scoreA;
+        pointsMap[pid].totalConceded += match.scoreB;
+        if (match.winner === 'A') pointsMap[pid].wins++;
+        else if (match.winner === 'B') pointsMap[pid].losses++;
+      }
+      for (const pid of match.teamB) {
+        if (!pointsMap[pid]) continue;
+        pointsMap[pid].totalScored += match.scoreB;
+        pointsMap[pid].totalConceded += match.scoreA;
+        if (match.winner === 'B') pointsMap[pid].wins++;
+        else if (match.winner === 'A') pointsMap[pid].losses++;
+      }
+    }
+
+    const result = Object.values(pointsMap);
+    result.forEach(p => { p.netScore = p.totalScored - p.totalConceded; });
+    return result;
+  },
+
   calcResults(gd: GameData) {
     const finishedMatches = gd.matches.filter(m => m.status === 'finished');
+    // 炮分用于MVP判定
     const scoreMap = calcGameTotalScores(finishedMatches, gd.cannonWeight, gd.players);
-    const changes = getScoreChanges(finishedMatches, gd.cannonWeight, gd.players);
+    // 比赛得分统计
+    const playerPoints = this.calcPlayerPoints(finishedMatches, gd.players);
     const stats = getCannonStats(finishedMatches);
 
     const memberMap = new Map(gd.members.map(m => [m._id, m]));
 
-    // 按得分排序
+    // 构建 entries
     const entries = gd.players
       .map(pid => {
         const m = memberMap.get(pid);
-        const change = changes.find(c => c.memberId === pid);
-        // 从 change breakdown 解析 净胜分，如 "6胜1负" → netWins=5
-        const netMatch = (change?.breakdown || '').match(/(\d+)胜(\d+)负/);
-        const netWins = netMatch ? parseInt(netMatch[1]) - parseInt(netMatch[2]) : 0;
+        const pp = playerPoints.find(p => p.memberId === pid);
         return {
           memberId: pid,
           name: m?.nickname || pid.slice(0, 6),
           avatar: m?.avatarUrl || '',
           gender: m?.gender ?? 1,
+          points: pp?.totalScored || 0,
+          netScore: pp?.netScore || 0,
+          wins: pp?.wins || 0,
+          losses: pp?.losses || 0,
           score: scoreMap[pid] || 0,
-          rank: 0,
-          change: change?.breakdown || '',
-          netWins
+          rank: 0
         };
-      })
-      .sort((a, b) => b.score - a.score);
+      });
 
-    // 赋排名
+    // 按比赛总得分排序决定排名
+    entries.sort((a, b) => b.points - a.points);
     entries.forEach((e, i) => { e.rank = i + 1; });
 
-    // MVP
-    const mvp = entries[0] || { name: '', avatar: '', score: 0 };
+    // MVP（炮分最高者，独立于排名）
+    const bestScore = Math.max(...entries.map(e => e.score));
+    const mvpEntry = entries.find(e => e.score === bestScore) || entries[0];
+    const mvp = mvpEntry || { memberId: '', name: '', avatar: '', score: 0, points: 0 };
     const mostCannoned = stats.mostCannoned;
     const mostFired = stats.mostFired;
 
     this.setData({
-      scoreMap,
       scoreEntries: entries,
-      mvp: { name: mvp.name, avatar: mvp.avatar, score: mvp.score },
+      mvp: { memberId: mvp.memberId, name: mvp.name, avatar: mvp.avatar, score: mvp.score, points: mvp.points },
       mostCannoned: {
         name: mostCannoned ? (memberMap.get(mostCannoned.memberId)?.nickname || '') : '',
         count: mostCannoned?.count || 0
@@ -107,12 +148,17 @@ Page({
   /** 保存比赛到云数据库 */
   saveGame(gd: GameData) {
     const db = wx.cloud.database();
-    // 同时保存选手详情（昵称），用于历史回放和重赛
+    // 同时保存选手详情（昵称、性别），用于历史回放和重赛
     const playerDetails = gd.members.map(m => ({
       _id: m._id,
       nickname: m.nickname,
-      avatarUrl: m.avatarUrl || ''
+      avatarUrl: m.avatarUrl || '',
+      gender: m.gender ?? 1
     }));
+
+    // 计算炮分用于保存
+    const finishedMatches = gd.matches.filter((m: Match) => m.status === 'finished');
+    const cannonScores = calcGameTotalScores(finishedMatches, gd.cannonWeight, gd.players);
 
     const gameRecord = {
       name: gd.name,
@@ -122,7 +168,7 @@ Page({
       players: gd.players,
       playerDetails,
       matches: gd.matches,
-      cannonScores: this.data.scoreMap,
+      cannonScores,
       createdBy: getApp<IAppOption>().globalData.userInfo?.openid || '',
       createdAt: new Date().toISOString(),
       finishedAt: new Date().toISOString()
@@ -147,7 +193,9 @@ Page({
   /** 更新队员统计 */
   updateMemberStats(players: string[]) {
     const db = wx.cloud.database();
-    const scoreMap = this.data.scoreMap;
+    // 从 scoreEntries 构建炮分映射
+    const scoreMap: Record<string, number> = {};
+    this.data.scoreEntries.forEach(e => { scoreMap[e.memberId] = e.score; });
 
     players.forEach(pid => {
       const score = scoreMap[pid] || 0;
@@ -188,7 +236,7 @@ Page({
         gender: m.gender ?? 1,
         avatarUrl: m.avatarUrl || ''
       })),
-      cannonScores: this.data.scoreMap,
+      cannonScores: this.data.scoreEntries.reduce((map: Record<string, number>, e) => { map[e.memberId] = e.score; return map; }, {}),
       matches: gd?.matches || []
     });
     wx.navigateTo({
