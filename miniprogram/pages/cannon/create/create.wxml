@@ -11,7 +11,7 @@
       </view>
     </view>
     <view class="text-xs text-hint mt-16">
-      {{playModeConfig.minPlayers}}-{{playModeConfig.maxPlayers}}人
+      3-6对（每对2人）
     </view>
   </view>
 
@@ -27,51 +27,122 @@
     />
   </view>
 
-  <!-- 输入选手昵称 -->
-  <view class="card">
-    <view class="flex mb-24">
-      <view class="form-label">🏸 输入选手昵称</view>
-      <text class="text-sm text-hint ml-8">（{{playModeConfig.minPlayers}}-{{playModeConfig.maxPlayers}}人）</text>
-    </view>
+  <!-- ============ 固定搭模式：搭档输入 ============ -->
+  <block wx:if="{{isPartnerMode}}">
+    <view class="card">
+      <view class="flex mb-24">
+        <view class="form-label">🏸 输入搭档组合</view>
+        <text class="text-sm text-hint ml-8">（3-6对，每对2人）</text>
+      </view>
 
-    <!-- 选手列表 -->
-    <view class="player-list">
-      <view class="player-item" wx:for="{{players}}" wx:key="id">
-        <view class="player-index">{{index + 1}}</view>
-        <input
-          class="player-input"
-          value="{{item.nickname}}"
-          placeholder="请输入选手{{index + 1}}昵称"
-          maxlength="10"
-          data-index="{{index}}"
-          bindinput="onPlayerInput"
-        />
-        <view
-          class="gender-btn {{item.gender === 2 ? 'gender-female' : ''}}"
-          data-index="{{index}}"
-          bindtap="onGenderToggle"
-        >{{item.gender === 2 ? '♀' : '♂'}}</view>
-        <view class="player-remove" wx:if="{{players.length > playModeConfig.minPlayers}}" data-index="{{index}}" bindtap="onRemovePlayer">×</view>
+      <!-- 搭档列表 -->
+      <view class="pair-list">
+        <view class="pair-card" wx:for="{{pairs}}" wx:key="id">
+          <view class="pair-header">
+            <text class="pair-label">第 {{index + 1}} 对</text>
+            <view class="pair-remove" wx:if="{{pairs.length > 3}}" data-index="{{index}}" bindtap="onRemovePair">×</view>
+          </view>
+          <view class="pair-players">
+            <!-- 队员1 -->
+            <view class="pair-player">
+              <input
+                class="pair-input"
+                value="{{item.player1.nickname}}"
+                placeholder="队员1昵称"
+                maxlength="10"
+                data-pair-index="{{index}}"
+                data-player-key="player1"
+                bindinput="onPairInput"
+              />
+              <view
+                class="gender-btn {{item.player1.gender === 2 ? 'gender-female' : ''}}"
+                data-pair-index="{{index}}"
+                data-player-key="player1"
+                bindtap="onPairGenderToggle"
+              >{{item.player1.gender === 2 ? '♀' : '♂'}}</view>
+            </view>
+            <!-- 队员2 -->
+            <view class="pair-player">
+              <input
+                class="pair-input"
+                value="{{item.player2.nickname}}"
+                placeholder="队员2昵称"
+                maxlength="10"
+                data-pair-index="{{index}}"
+                data-player-key="player2"
+                bindinput="onPairInput"
+              />
+              <view
+                class="gender-btn {{item.player2.gender === 2 ? 'gender-female' : ''}}"
+                data-pair-index="{{index}}"
+                data-player-key="player2"
+                bindtap="onPairGenderToggle"
+              >{{item.player2.gender === 2 ? '♀' : '♂'}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="player-actions">
+        <button class="btn-add-player" disabled="{{pairs.length >= 6}}" bindtap="onAddPair">+ 添加搭档</button>
+        <button class="btn-import-player" bindtap="onShowImportModal">📥 从报名导入</button>
+      </view>
+
+      <!-- 统计信息 -->
+      <view class="player-stats text-xs text-hint mt-24">
+        当前搭档：<text class="text-brand">{{pairCount}}</text>对
+        <text class="ml-24" wx:if="{{totalMatches > 0}}">
+          ，预计比赛场数：<text class="text-brand">{{totalMatches}}</text>场
+        </text>
       </view>
     </view>
+  </block>
 
-    <!-- 操作按钮 -->
-    <view class="player-actions">
-      <button class="btn-add-player" disabled="{{players.length >= playModeConfig.maxPlayers}}" bindtap="onAddPlayer">+ 添加选手</button>
-      <button class="btn-import-player" bindtap="onShowImportModal">📥 从报名导入</button>
-    </view>
+  <!-- ============ 普通模式：个人输入 ============ -->
+  <block wx:else>
+    <view class="card">
+      <view class="flex mb-24">
+        <view class="form-label">🏸 输入选手昵称</view>
+        <text class="text-sm text-hint ml-8">（{{playModeConfig.minPlayers}}-{{playModeConfig.maxPlayers}}人）</text>
+      </view>
 
-    <!-- 统计信息 -->
-    <view class="player-stats text-xs text-hint mt-24">
-      当前选手：<text class="text-brand">{{players.length}}</text>人
-      <text class="ml-24" wx:if="{{players.length >= playModeConfig.minPlayers}}">
-        ，每人参赛场次：<text class="text-brand">{{matchCountPerPlayer}}</text>场
-      </text>
-      <text class="ml-24" wx:if="{{totalMatches > 0}}">
-        ，比赛场数：<text class="text-brand">{{totalMatches}}</text>场
-      </text>
+      <view class="player-list">
+        <view class="player-item" wx:for="{{players}}" wx:key="id">
+          <view class="player-index">{{index + 1}}</view>
+          <input
+            class="player-input"
+            value="{{item.nickname}}"
+            placeholder="请输入选手{{index + 1}}昵称"
+            maxlength="10"
+            data-index="{{index}}"
+            bindinput="onPlayerInput"
+          />
+          <view
+            class="gender-btn {{item.gender === 2 ? 'gender-female' : ''}}"
+            data-index="{{index}}"
+            bindtap="onGenderToggle"
+          >{{item.gender === 2 ? '♀' : '♂'}}</view>
+          <view class="player-remove" wx:if="{{players.length > playModeConfig.minPlayers}}" data-index="{{index}}" bindtap="onRemovePlayer">×</view>
+        </view>
+      </view>
+
+      <view class="player-actions">
+        <button class="btn-add-player" disabled="{{players.length >= playModeConfig.maxPlayers}}" bindtap="onAddPlayer">+ 添加选手</button>
+        <button class="btn-import-player" bindtap="onShowImportModal">📥 从报名导入</button>
+      </view>
+
+      <view class="player-stats text-xs text-hint mt-24">
+        当前选手：<text class="text-brand">{{players.length}}</text>人
+        <text class="ml-24" wx:if="{{players.length >= playModeConfig.minPlayers}}">
+          ，每人参赛场次：<text class="text-brand">{{matchCountPerPlayer}}</text>场
+        </text>
+        <text class="ml-24" wx:if="{{totalMatches > 0}}">
+          ，比赛场数：<text class="text-brand">{{totalMatches}}</text>场
+        </text>
+      </view>
     </view>
-  </view>
+  </block>
 
   <!-- 从报名导入弹窗 -->
   <view class="modal-mask" wx:if="{{showImportModal}}" bindtap="onHideImportModal"></view>

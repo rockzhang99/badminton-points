@@ -109,5 +109,18 @@ Page({
         }
       }
     });
+  },
+
+  onClearData() {
+    wx.showModal({
+      title: '炮灰粉碎',
+      content: '确认清除所有本地数据？云上数据不受影响。',
+      success: res => {
+        if (res.confirm) {
+          wx.clearStorageSync();
+          wx.showToast({ title: '炮灰已粉碎！', icon: 'success' });
+        }
+      }
+    });
   }
 });

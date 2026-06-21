@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**星羽炮分榜 (StarCannon Leaderboard)** — A WeChat Mini Program for badminton club scoring, ranking, and fee splitting. Brand persona: "章一炮" (Bro Cannon), gameful and edgy.
+**星羽烽火台 (StarCannon Leaderboard)** — A WeChat Mini Program for badminton club scoring, ranking, and fee splitting. Brand persona: "章一炮" (Bro Cannon), gameful and edgy.
 
 Tech stack: Native WeChat Mini Program + TypeScript + WeChat Cloud Development (CloudBase). No external backend servers.
 
@@ -40,15 +40,11 @@ miniprogram/
 │   │   ├── match/                         — Match generation: court layout, reshuffle
 │   │   ├── scoring/                       — Core scoring: swipe courts, +/- buttons, cannon events
 │   │   └── result/                        — Results: MVP, cannon scores, share card
-│   ├── leaderboard/total/                 — Leaderboard: 4 tab dimensions (total/weekly/max/anti-cannon)
 │   ├── arsenal/
 │   │   ├── history/                       — Game history list (reverse chronological)
 │   │   ├── detail/                        — Game detail: ranking tab + match tab
-│   │   └── members/                       — Player management: CRUD, cannon-fodder flag
-│   ├── settlement/billing/                — Fee splitting: court/shuttle fees, female discount
-│   └── mine/
-│       ├── index/                         — Profile: stats, badges
-│       └── badges/                        — Badge showcase
+│   │   └── members/                       — Player management: CRUD, cannon-fodder flag, clear local data
+│   └── settlement/billing/                — Fee splitting: court/shuttle fees, female discount
 ├── cloudfunctions/
 │   ├── getLeaderboard/                    — Aggregated leaderboard query (top 100)
 │   └── weeklyReset/                       — Scheduled weekly reset trigger
@@ -90,7 +86,7 @@ Two collections: `games` (match records with embedded matches, cannon scores, bi
 
 Each is a pure TypeScript module testable in isolation:
 - **`play-modes.ts`** — Config map of 6 modes, filterable by player count
-- **`match-engine.ts`** — Fisher-Yates shuffle, greedy pairing for rotation, bracket generation for elimination, cycle robin, AB-team five-feather
+- **`match-engine.ts`** — Fisher-Yates shuffle, greedy pairing for rotation, fixed-partner round robin
 - **`score-engine.ts`** — `finalScore = baseScore × cannonWeight × winMultiplier × (1 - sum(cannonPenalties))`, capped at 30% penalty
 - **`billing.ts`** — `share = courtFee/N + shuttleFee × (scoreRatio) - femaleDiscount`, with "Bro Cannon pays" override
 

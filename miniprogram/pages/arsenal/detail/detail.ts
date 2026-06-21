@@ -21,6 +21,23 @@ interface ScoreEntry {
   rank: number;
 }
 
+/** 固定搭模式：一对搭档的排名条目 */
+interface PairScoreEntry {
+  id: string;
+  player1Name: string;
+  player1Gender: number;
+  player1Avatar: string;
+  player2Name: string;
+  player2Gender: number;
+  player2Avatar: string;
+  points: number;        // 积分 = wins × 2
+  wins: number;
+  losses: number;
+  netScore: number;
+  cannonScore: number;
+  rank: number;
+}
+
 /** 带性别的选手名 */
 interface PlayerNameInfo {
   name: string;
@@ -32,6 +49,8 @@ Page({
     game: null as any,
     modeDisplayName: '',
     scoreEntries: [] as ScoreEntry[],
+    pairEntries: [] as PairScoreEntry[],
+    isBlindCannon: false,
     activeTab: 'rank' as 'rank' | 'matches',
     playerCount: 0,
     totalMatches: 0,
@@ -175,6 +194,39 @@ Page({
     // 赋名次
     entries.forEach((e, i) => { e.rank = i + 1; });
 
+    // ---- 固定搭模式：将相邻选手合并为搭档对 ----
+    const isBlindCannon = game.playMode === 'blind_cannon';
+    let pairEntries: PairScoreEntry[] = [];
+    if (isBlindCannon) {
+      for (let i = 0; i < entries.length; i += 2) {
+        const p1 = entries[i];
+        const p2 = entries[i + 1];
+        if (!p1 || !p2) break;
+        pairEntries.push({
+          id: `pair_${i / 2}`,
+          player1Name: p1.name,
+          player1Gender: p1.gender,
+          player1Avatar: p1.avatar,
+          player2Name: p2.name,
+          player2Gender: p2.gender,
+          player2Avatar: p2.avatar,
+          points: p1.wins * 2, // 每胜1场得2分
+          wins: p1.wins,
+          losses: p1.losses,
+          netScore: p1.netScore + p2.netScore,
+          cannonScore: p1.cannonScore + p2.cannonScore,
+          rank: 0
+        });
+      }
+      // 按积分 → 胜场 → 净胜分排序
+      pairEntries.sort((a, b) =>
+        (b.points - a.points) ||
+        (b.wins - a.wins) ||
+        (b.netScore - a.netScore)
+      );
+      pairEntries.forEach((e, i) => { e.rank = i + 1; });
+    }
+
     // 对阵记录中补充名字和性别（创建新的 matchesWithNames）
     const matchesWithNames = finishedMatches.map((m: Match) => ({
       ...m,
@@ -185,6 +237,8 @@ Page({
     this.setData({
       game: { ...game, name: displayName },
       scoreEntries: entries,
+      pairEntries,
+      isBlindCannon,
       matchesWithNames,
       playerCount: playerIds.length,
       totalMatches: finishedMatches.length,

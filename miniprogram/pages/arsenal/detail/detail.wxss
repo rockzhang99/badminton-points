@@ -75,6 +75,16 @@
 
 /* 列宽 */
 .col-name { flex: 2.5; min-width: 0; }
+.col-pts {
+  width: 80rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--color-brand);
+}
+.pts-value {
+  color: var(--color-brand);
+}
 .col-wl {
   width: 120rpx;
   text-align: center;
@@ -111,6 +121,22 @@
   height: 40rpx;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+/* 搭档对名字（固定搭模式） */
+.name-cell-pair {
+  flex-wrap: wrap;
+  gap: 4rpx 6rpx;
+}
+.pair-player-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.pair-amp {
+  font-size: 22rpx;
+  color: var(--color-text-hint);
+  margin: 0 2rpx;
 }
 
 /* 净胜分颜色 */
@@ -240,5 +266,7 @@
   font-size: 24rpx;
   flex-shrink: 0;
 }
+.name-cell .gender-icon-female,
 .gender-icon-female { color: #EC4899; }
+.name-cell .gender-icon-male,
 .gender-icon-male { color: #3B82F6; }

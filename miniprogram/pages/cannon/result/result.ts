@@ -91,6 +91,23 @@ Page({
     return result;
   },
 
+  /** 胜负关系判定：返回 a 对 b 的直接对话结果 */
+  getHeadToHead(aId: string, bId: string, matches: Match[]): number {
+    for (const m of matches) {
+      const aInA = m.teamA.includes(aId);
+      const aInB = m.teamB.includes(aId);
+      const bInA = m.teamA.includes(bId);
+      const bInB = m.teamB.includes(bId);
+      if ((aInA && bInB) || (aInB && bInA)) {
+        // a和b直接对抗
+        if (m.winner === '') return 0;
+        const aWins = (aInA && m.winner === 'A') || (aInB && m.winner === 'B');
+        return aWins ? -1 : 1; // a赢 → a排前面(-1), b赢 → b排前面(1)
+      }
+    }
+    return 0;
+  },
+
   calcResults(gd: GameData) {
     const finishedMatches = gd.matches.filter(m => m.status === 'finished');
     // 炮分用于MVP判定
@@ -120,8 +137,23 @@ Page({
         };
       });
 
-    // 按比赛总得分排序决定排名
-    entries.sort((a, b) => b.points - a.points);
+    // 按排名规则排序
+    if (gd.mode === 'blind_cannon') {
+      // 固定搭循环赛：积分(2/胜) → 胜场数 → 胜负关系 → 净胜分 → 总得分
+      entries.sort((a, b) => {
+        const ptsA = a.wins * 2;
+        const ptsB = b.wins * 2;
+        if (ptsB !== ptsA) return ptsB - ptsA;
+        if (b.wins !== a.wins) return b.wins - a.wins;
+        const h2h = this.getHeadToHead(a.memberId, b.memberId, finishedMatches);
+        if (h2h !== 0) return h2h;
+        if (b.netScore !== a.netScore) return b.netScore - a.netScore;
+        return b.points - a.points;
+      });
+    } else {
+      // 普通模式：按比赛总得分排序
+      entries.sort((a, b) => b.points - a.points);
+    }
     entries.forEach((e, i) => { e.rank = i + 1; });
 
     // MVP（炮分最高者，独立于排名）

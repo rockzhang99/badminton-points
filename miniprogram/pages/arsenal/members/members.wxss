@@ -69,3 +69,17 @@
   background: var(--color-brand);
   color: #fff;
 }
+
+.footer-section {
+  padding: 40rpx 48rpx;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+}
+
+.btn-clear {
+  background: rgba(239,68,68,0.06); color: var(--color-lose); border: none;
+  font-size: 24rpx; padding: 20rpx; border-radius: var(--radius-sm);
+  width: 100%;
+}
+
+.btn-clear::after { border: none; }
+.btn-clear:active { background: rgba(239,68,68,0.12); }

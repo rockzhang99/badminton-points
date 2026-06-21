@@ -5,18 +5,15 @@
     "pages/cannon/match/match",
     "pages/cannon/scoring/scoring",
     "pages/cannon/result/result",
-    "pages/leaderboard/total/total",
     "pages/arsenal/history/history",
     "pages/arsenal/detail/detail",
     "pages/arsenal/members/members",
-    "pages/settlement/billing/billing",
-    "pages/mine/index/index",
-    "pages/mine/badges/badges"
+    "pages/settlement/billing/billing"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FFFFFF",
-    "navigationBarTitleText": "星羽炮分榜",
+    "navigationBarTitleText": "星羽烽火台",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#F8F9FA"
   },
@@ -33,22 +30,10 @@
         "selectedIconPath": "images/tab-cannon-active.png"
       },
       {
-        "pagePath": "pages/leaderboard/total/total",
-        "text": "炮分榜",
-        "iconPath": "images/tab-rank.png",
-        "selectedIconPath": "images/tab-rank-active.png"
-      },
-      {
         "pagePath": "pages/arsenal/history/history",
         "text": "炮库",
         "iconPath": "images/tab-arsenal.png",
         "selectedIconPath": "images/tab-arsenal-active.png"
-      },
-      {
-        "pagePath": "pages/mine/index/index",
-        "text": "我的",
-        "iconPath": "images/tab-mine.png",
-        "selectedIconPath": "images/tab-mine-active.png"
       }
     ]
   },

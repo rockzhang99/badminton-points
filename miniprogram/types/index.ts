@@ -1,17 +1,13 @@
 // types/index.ts
-// 星羽炮分榜 - 全局类型定义
+// 星羽烽火台 - 全局类型定义
 
 /** 队员性别 */
 export type Gender = 1 | 2; // 1:男 2:女
 
 /** 玩法类型 */
 export type PlayMode =
-  | 'cannon_rotation_8'   // 炮轮八人转
-  | 'blind_cannon'         // 盲炮搭档赛
-  | 'one_shot'             // 一炮定乾坤
-  | 'bombardment'          // 炮轰循环赛
-  | 'five_feather'         // 五羽炮轮比
-  | 'free_cannon';         // 自由炮局
+  | 'cannon_rotation_8'   // 四到八人转
+  | 'blind_cannon';        // 固搭循环赛
 
 /** 玩法配置 */
 export interface PlayModeConfig {
@@ -109,6 +105,13 @@ export type BadgeType =
   | 'streak_win_3'     // 连炮勋章(连赢3局)
   | 'streak_lose_3'    // 哑炮勋章(连输3局)
   | 'cannon_god';      // 炮神勋章(周榜第一)
+
+/** 搭档对（固定搭循环赛用） */
+export interface PartnerPair {
+  id: string;
+  player1: { id: string; nickname: string; gender: Gender };
+  player2: { id: string; nickname: string; gender: Gender };
+}
 
 /** 排行榜维度 */
 export type RankDimension = 'total' | 'weekly' | 'onepunch' | 'anti_cannon';

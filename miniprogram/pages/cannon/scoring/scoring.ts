@@ -312,7 +312,7 @@ Page({
         return acc;
       }, [] as string[]),
       members: this.data.members,
-      mode: (app.globalData.currentGame as GameData)?.mode || 'free_cannon'
+      mode: (app.globalData.currentGame as GameData)?.mode || 'cannon_rotation_8'
     };
 
     wx.redirectTo({ url: '/pages/cannon/result/result' });

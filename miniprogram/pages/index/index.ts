@@ -7,7 +7,7 @@ Page({
     playModes: PLAY_MODES,
     recentGames: [] as any[],
     showEmpty: true,
-    cannonSlogan: '一炮组局，炮分上榜'
+    cannonSlogan: '羽球爱好者自己的组局工具'
   },
 
   onShow() {
@@ -84,7 +84,7 @@ Page({
   /** 分享 */
   onShareAppMessage() {
     return {
-      title: '星羽炮分榜 - 一炮组局，炮分上榜',
+      title: '星羽烽火台 - 羽球爱好者自己的组局工具',
       path: '/pages/index/index'
     };
   }

@@ -66,6 +66,66 @@
   gap: 16rpx;
 }
 
+/* 搭档列表（固定搭模式） */
+.pair-list {
+  margin-top: 16rpx;
+}
+
+.pair-card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  border: 1rpx solid var(--color-border);
+}
+
+.pair-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.pair-label {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--color-brand);
+}
+
+.pair-remove {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--color-lose);
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pair-players {
+  display: flex;
+  gap: 12rpx;
+}
+
+.pair-player {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+  padding: 10rpx 14rpx;
+}
+
+.pair-input {
+  flex: 1;
+  height: 56rpx;
+  font-size: 26rpx;
+  color: var(--color-text-primary);
+  background: transparent;
+}
+
 /* 选手列表 */
 .player-list {
   margin-top: 16rpx;

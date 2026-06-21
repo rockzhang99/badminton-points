@@ -24,43 +24,64 @@
     >对阵</view>
   </view>
 
-  <!-- ===== 排名 Tab（参照左图）===== -->
+  <!-- ===== 排名 Tab ===== -->
   <block wx:if="{{activeTab === 'rank'}}">
 
-    <!-- 表头行：参赛选手 | 胜-负 | 净胜分 | 名次 -->
-    <view class="rank-table card">
-      <view class="rank-header">
-        <view class="col-name">参赛选手</view>
-        <view class="col-wl">胜-负</view>
-        <view class="col-net">净胜分</view>
-        <view class="col-rank">名次</view>
-      </view>
-
-      <!-- 数据行 -->
-      <view class="rank-row" wx:for="{{scoreEntries}}" wx:key="memberId">
-        <!-- 名字列 -->
-        <view class="col-name">
-          <view class="name-cell">
-            <image
-              wx:if="{{item.avatar}}"
-              class="name-avatar"
-              src="{{item.avatar}}"
-              mode="aspectFill"
-            />
-            <text>{{item.name}}</text>
-            <text class="gender-icon {{item.gender === 2 ? 'gender-icon-female' : 'gender-icon-male'}}">{{item.gender === 2 ? '♀' : '♂'}}</text>
+    <!-- 固定搭模式：搭档排名表 -->
+    <block wx:if="{{isBlindCannon}}">
+      <view class="rank-table card">
+        <view class="rank-header">
+          <view class="col-name">参赛选手</view>
+          <view class="col-pts">积分</view>
+          <view class="col-wl">胜-负</view>
+          <view class="col-net">净胜分</view>
+          <view class="col-rank">名次</view>
+        </view>
+        <view class="rank-row" wx:for="{{pairEntries}}" wx:key="id">
+          <view class="col-name">
+            <view class="name-cell name-cell-pair">
+              <text class="pair-player-name">{{item.player1Name}}</text>
+              <text class="gender-icon {{item.player1Gender === 2 ? 'gender-icon-female' : 'gender-icon-male'}}">{{item.player1Gender === 2 ? '♀' : '♂'}}</text>
+              <text class="pair-amp">&</text>
+              <text class="pair-player-name">{{item.player2Name}}</text>
+              <text class="gender-icon {{item.player2Gender === 2 ? 'gender-icon-female' : 'gender-icon-male'}}">{{item.player2Gender === 2 ? '♀' : '♂'}}</text>
+            </view>
           </view>
+          <view class="col-pts pts-value">{{item.points}}</view>
+          <view class="col-wl">{{item.wins}}-{{item.losses}}</view>
+          <view class="col-net {{item.netScore >= 0 ? 'net-positive' : 'net-negative'}}">
+            {{item.netScore >= 0 ? '+' : ''}}{{item.netScore}}
+          </view>
+          <view class="col-rank rank-num {{item.rank <= 3 ? 'rank-top' : ''}}">{{item.rank}}</view>
         </view>
-        <!-- 胜-负 -->
-        <view class="col-wl">{{item.wins}}-{{item.losses}}</view>
-        <!-- 净胜分 -->
-        <view class="col-net {{item.netScore >= 0 ? 'net-positive' : 'net-negative'}}">
-          {{item.netScore >= 0 ? '+' : ''}}{{item.netScore}}
-        </view>
-        <!-- 名次 -->
-        <view class="col-rank rank-num {{item.rank <= 3 ? 'rank-top' : ''}}">{{item.rank}}</view>
       </view>
-    </view>
+    </block>
+
+    <!-- 普通模式：个人排名表 -->
+    <block wx:else>
+      <view class="rank-table card">
+        <view class="rank-header">
+          <view class="col-name">参赛选手</view>
+          <view class="col-wl">胜-负</view>
+          <view class="col-net">净胜分</view>
+          <view class="col-rank">名次</view>
+        </view>
+        <view class="rank-row" wx:for="{{scoreEntries}}" wx:key="memberId">
+          <view class="col-name">
+            <view class="name-cell">
+              <image wx:if="{{item.avatar}}" class="name-avatar" src="{{item.avatar}}" mode="aspectFill" />
+              <text>{{item.name}}</text>
+              <text class="gender-icon {{item.gender === 2 ? 'gender-icon-female' : 'gender-icon-male'}}">{{item.gender === 2 ? '♀' : '♂'}}</text>
+            </view>
+          </view>
+          <view class="col-wl">{{item.wins}}-{{item.losses}}</view>
+          <view class="col-net {{item.netScore >= 0 ? 'net-positive' : 'net-negative'}}">
+            {{item.netScore >= 0 ? '+' : ''}}{{item.netScore}}
+          </view>
+          <view class="col-rank rank-num {{item.rank <= 3 ? 'rank-top' : ''}}">{{item.rank}}</view>
+        </view>
+      </view>
+    </block>
 
   </block>
 

@@ -40,6 +40,11 @@
     </view>
   </view>
 
+  <!-- 炮灰粉碎 -->
+  <view class="footer-section">
+    <button class="btn-clear" bindtap="onClearData">💣 炮灰粉碎（清除本地数据）</button>
+  </view>
+
   <!-- 添加队员弹窗 -->
   <view class="overlay" wx:if="{{showAdd}}" bindtap="hideAddForm">
     <view class="add-panel" catchtap="noop">

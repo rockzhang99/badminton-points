@@ -59,7 +59,7 @@
   <!-- 操作区 -->
   <view class="footer-bar">
     <view class="flex">
-      <button class="btn-secondary flex-1 mr-16" bindtap="onReshuffle">
+      <button class="btn-secondary flex-1 mr-16" wx:if="{{mode !== 'blind_cannon'}}" bindtap="onReshuffle">
         🔄 重新洗牌
       </button>
       <button class="btn-cannon flex-1" bindtap="onStartGame">
