@@ -227,7 +227,7 @@ Page({
       pairEntries.forEach((e, i) => { e.rank = i + 1; });
     }
 
-    // 对阵记录中补充名字和性别（创建新的 matchesWithNames）
+    // 对阵记录中补充名字和性别（创建的 matchesWithNames）
     const matchesWithNames = finishedMatches.map((m: Match) => ({
       ...m,
       teamANames: this.resolveNamesWithGender(m.teamA, nameMap),

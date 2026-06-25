@@ -42,7 +42,7 @@
     <view class="empty-state" wx:if="{{showEmpty}}">
       <view class="empty-icon">🎯</view>
       <view class="empty-text">
-        暂无比赛记录，点击上方创建新
+        暂无比赛记录，点击上方创建
       </view>
     </view>
 
