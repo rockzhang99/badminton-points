@@ -13,7 +13,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FFFFFF",
-    "navigationBarTitleText": "星羽烽火台",
+    "navigationBarTitleText": "球局计分器",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#F8F9FA"
   },
@@ -25,13 +25,13 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "开炮组局",
+        "text": "创建比赛",
         "iconPath": "images/tab-cannon.png",
         "selectedIconPath": "images/tab-cannon-active.png"
       },
       {
         "pagePath": "pages/arsenal/history/history",
-        "text": "炮库",
+        "text": "历史记录",
         "iconPath": "images/tab-arsenal.png",
         "selectedIconPath": "images/tab-arsenal-active.png"
       }

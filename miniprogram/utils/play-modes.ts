@@ -5,7 +5,7 @@ import { PlayModeConfig } from '../types/index';
 export const PLAY_MODES: PlayModeConfig[] = [
   {
     mode: 'cannon_rotation_8',
-    name: '四到八人转',
+    name: '多人轮转计分',
     nameEn: 'Cannon Rotation 8',
     desc: '4-8人轮转，每人与其他选手各搭档1次',
     descShort: '轮转搭档赛',
@@ -15,7 +15,7 @@ export const PLAY_MODES: PlayModeConfig[] = [
   },
   {
     mode: 'blind_cannon',
-    name: '固定搭循环赛',
+    name: '固定搭档计分',
     nameEn: 'Fixed Partner RR',
     desc: '固定搭档・循环对抗（3-6对，每对2人）',
     descShort: '固定搭档循环',

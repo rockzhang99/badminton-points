@@ -3,13 +3,13 @@
 
   <!-- 顶部 Slogan -->
   <view class="hero">
-    <view class="hero-title">🚀 星羽烽火台</view>
+    <view class="hero-title">🚀 球局计分器</view>
     <view class="hero-slogan">{{cannonSlogan}}</view>
   </view>
 
   <!-- 玩法选择卡片 - 彩色网格 -->
   <view class="section">
-    <view class="section-title">选择炮式玩法</view>
+    <view class="section-title">创建比赛模式</view>
     <view class="mode-grid" wx:if="{{playModes.length}}">
       <view
         class="grid-card card-{{index % 6}}"
@@ -34,7 +34,7 @@
   <!-- 最近比赛 -->
   <view class="section">
     <view class="section-header flex-between">
-      <view class="section-title">最近炮局</view>
+      <view class="section-title">历史记录</view>
       <view class="section-more" bindtap="onViewHistory">查看全部 ›</view>
     </view>
 
@@ -42,7 +42,7 @@
     <view class="empty-state" wx:if="{{showEmpty}}">
       <view class="empty-icon">🎯</view>
       <view class="empty-text">
-        还没有炮局<br/>快让章一炮开一炮！
+        暂无比赛记录，点击上方创建新
       </view>
     </view>
 

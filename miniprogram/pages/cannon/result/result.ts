@@ -139,7 +139,7 @@ Page({
 
     // 按排名规则排序
     if (gd.mode === 'blind_cannon') {
-      // 固定搭循环赛：积分(2/胜) → 胜场数 → 胜负关系 → 净胜分 → 总得分
+      // 固定搭档计分：积分(2/胜) → 胜场数 → 胜负关系 → 净胜分 → 总得分
       entries.sort((a, b) => {
         const ptsA = a.wins * 2;
         const ptsB = b.wins * 2;

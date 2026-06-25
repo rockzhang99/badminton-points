@@ -1,7 +1,7 @@
 <!-- pages/arsenal/history/history.wxml -->
 <view class="page">
 
-  <view class="section-title">📦 历史炮局</view>
+  <view class="section-title">📦 历史记录</view>
 
   <view class="game-list">
     <view
@@ -23,7 +23,7 @@
 
     <view class="empty-state" wx:if="{{games.length === 0 && !loading}}">
       <view class="empty-icon">📦</view>
-      <view class="empty-text">还没有炮局<br/>快让章一炮开一炮！</view>
+      <view class="empty-text">暂无比赛记录，点击上方创建新</view>
     </view>
   </view>
 

@@ -193,7 +193,7 @@
       bindtap="onFire"
       disabled="{{!canStart}}"
     >
-      🚀 开炮组局！
+      🚀 创建比赛！
     </button>
   </view>
 

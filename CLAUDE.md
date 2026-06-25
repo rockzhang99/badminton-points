@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**星羽烽火台 (StarCannon Leaderboard)** — A WeChat Mini Program for badminton club scoring, ranking, and fee splitting. Brand persona: "章一炮" (Bro Cannon), gameful and edgy.
+**球局计分器 (StarCannon Leaderboard)** — A WeChat Mini Program for badminton club scoring, ranking, and fee splitting. Brand persona: "章一炮" (Bro Cannon), gameful and edgy.
 
 Tech stack: Native WeChat Mini Program + TypeScript + WeChat Cloud Development (CloudBase). No external backend servers.
 

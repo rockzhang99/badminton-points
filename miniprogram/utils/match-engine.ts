@@ -17,7 +17,7 @@ export function generateMatches(mode: PlayMode, players: string[]): Match[] {
 }
 
 /**
- * 四到八人转（4-8人）
+ * 多人轮转计分（4-8人）
  * 轮转搭档赛：每人与其他选手各搭档1次
  * 4人：3场，每人3场
  * 5人：5场，每人4场
@@ -28,7 +28,7 @@ export function generateMatches(mode: PlayMode, players: string[]): Match[] {
 export function generateCannonRotation(players: string[]): Match[] {
   const n = players.length;
   if (n < 4 || n > 8) {
-    throw new Error('四到八人转需要 4-8 名队员');
+    throw new Error('多人轮转计分需要 4-8 名队员');
   }
 
   const pairKey = (a: number, b: number) => `${Math.min(a, b)}-${Math.max(a, b)}`;
@@ -114,14 +114,14 @@ export function generateCannonRotation(players: string[]): Match[] {
 }
 
 /**
- * 固定搭循环赛（6-12人 = 3-6对）
+ * 固定搭档计分（6-12人 = 3-6对）
  * 搭档已固定（传入的 player IDs 中相邻两两一对），每对与其他各对交手1次
  * 不洗牌，保持传入顺序的配对结构
  */
 export function generateBlindCannon(players: string[]): Match[] {
   const n = players.length;
   if (n < 6 || n > 12 || n % 2 !== 0) {
-    throw new Error('固定搭循环赛需要 3-6 对（6-12人）');
+    throw new Error('固定搭档计分需要 3-6 对（6-12人）');
   }
 
   // 相邻两两一对（不洗牌，保持传入顺序）

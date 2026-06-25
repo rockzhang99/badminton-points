@@ -7,7 +7,7 @@ Page({
     playModes: PLAY_MODES,
     recentGames: [] as any[],
     showEmpty: true,
-    cannonSlogan: '羽球爱好者自己的组局工具'
+    cannonSlogan: '羽球爱好者自己的计分器'
   },
 
   onShow() {
@@ -84,7 +84,7 @@ Page({
   /** 分享 */
   onShareAppMessage() {
     return {
-      title: '星羽烽火台 - 羽球爱好者自己的组局工具',
+      title: '球局计分器 - 羽球爱好者自己的计分器',
       path: '/pages/index/index'
     };
   }

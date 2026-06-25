@@ -1,12 +1,12 @@
 // types/index.ts
-// 星羽烽火台 - 全局类型定义
+// 球局计分器 - 全局类型定义
 
 /** 队员性别 */
 export type Gender = 1 | 2; // 1:男 2:女
 
 /** 玩法类型 */
 export type PlayMode =
-  | 'cannon_rotation_8'   // 四到八人转
+  | 'cannon_rotation_8'   // 多人轮转计分
   | 'blind_cannon';        // 固搭循环赛
 
 /** 玩法配置 */
@@ -106,7 +106,7 @@ export type BadgeType =
   | 'streak_lose_3'    // 哑炮勋章(连输3局)
   | 'cannon_god';      // 炮神勋章(周榜第一)
 
-/** 搭档对（固定搭循环赛用） */
+/** 搭档对（固定搭档计分用） */
 export interface PartnerPair {
   id: string;
   player1: { id: string; nickname: string; gender: Gender };

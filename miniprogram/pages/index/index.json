@@ -1,6 +1,6 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "开炮组局",
+  "navigationBarTitleText": "创建比赛",
   "navigationStyle": "custom",
   "enablePullDownRefresh": false
 }
