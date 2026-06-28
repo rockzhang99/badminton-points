@@ -22,7 +22,7 @@
     "uploadWithSourceMap": true,
     "useIsolateContext": true,
     "nodeModules": false,
-    "enhance": true,
+    "enhance": false,
     "useMultiFrameRuntime": true,
     "useApiHook": true,
     "useApiHostProcess": true,
@@ -53,8 +53,6 @@
   "appid": "wx8d4372c9744db2c0",
   "projectname": "starcannon-leaderboard",
   "condition": {},
-  "cloudfunctionRoot": "cloudfunctions/",
-  "cloud": true,
   "simulatorPluginLibVersion": {},
   "editorSetting": {}
 }

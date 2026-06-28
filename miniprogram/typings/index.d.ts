@@ -4,7 +4,7 @@
 interface IAppOption {
   globalData: {
     userInfo: WechatMiniprogram.UserInfo | null;
-    isCloudReady: boolean;
+    apiReady: boolean;
     currentGame?: any;
   };
   getUserInfo: () => void;

@@ -1,6 +1,7 @@
 // pages/arsenal/history/history.ts
 import { Game } from '../../../types/index';
 import { PLAY_MODES } from '../../../utils/play-modes';
+import { gameApi } from '../../../utils/api';
 
 const modeNameMap = new Map(PLAY_MODES.map(m => [m.mode, m.name]));
 
@@ -33,17 +34,25 @@ Page({
 
   async loadGames() {
     this.setData({ loading: true });
-    const db = wx.cloud.database();
 
     try {
-      const res = await db.collection('games')
-        .orderBy('createdAt', 'desc')
-        .limit(50)
-        .get();
-      this.setData({ games: (res.data as Game[]).map(g => ({ ...g, playModeName: getModeName(g.playMode), timeShort: getTimeShort(g.createdAt) })) });
+      const res = await gameApi.list(50);
+      const games = (res as any[]).map(g => ({
+        ...g,
+        playModeName: getModeName(g.playMode),
+        timeShort: getTimeShort(g.createdAt)
+      }));
+      this.setData({ games });
+      wx.setStorageSync('games', res);
     } catch {
       const cached = wx.getStorageSync('games') || [];
-      this.setData({ games: (cached as Game[]).map(g => ({ ...g, playModeName: getModeName(g.playMode), timeShort: getTimeShort(g.createdAt) })) });
+      this.setData({
+        games: (cached as any[]).map(g => ({
+          ...g,
+          playModeName: getModeName(g.playMode),
+          timeShort: getTimeShort(g.createdAt)
+        }))
+      });
     }
 
     this.setData({ loading: false });

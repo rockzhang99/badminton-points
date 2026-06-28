@@ -1,5 +1,6 @@
 // pages/settlement/billing/billing.ts
 import { calcBilling, exemptMember, BillingParams, BillingResult } from '../../../utils/billing';
+import { gameApi } from '../../../utils/api';
 
 Page({
   data: {
@@ -60,11 +61,10 @@ Page({
       }
 
       if (this.data.gameId) {
-        const db = wx.cloud.database();
-        const res = await db.collection('games').doc(this.data.gameId).get();
+        const game = await gameApi.get(this.data.gameId);
         this.setData({
-          game: res.data,
-          cannonScores: (res.data as any)?.cannonScores || {}
+          game,
+          cannonScores: (game as any)?.cannonScores || {}
         });
       }
     } catch (e) {
@@ -156,7 +156,6 @@ Page({
       members
     });
 
-    // 固定球费模式校验：人均球费不足时阻止分摊
     if (result.warning) {
       wx.showToast({ title: result.warning, icon: 'none', duration: 3000 });
       return;
@@ -196,7 +195,7 @@ Page({
     wx.showToast({ title: '炮哥请客！', icon: 'none' });
   },
 
-  onSaveBill() {
+  async onSaveBill() {
     const { result, memberDetails, gameId, courtFee, shuttle1Count, shuttle1Price,
             shuttle2Count, shuttle2Price, otherFee, femaleMode, femaleDeductAmount,
             femaleFixedAmount } = this.data;
@@ -236,29 +235,27 @@ Page({
       savedAt: new Date().toISOString()
     };
 
-    const db = wx.cloud.database();
     const isLocal = (gameId || '').startsWith('local_');
-    const saveAction = isLocal
-      ? (() => {
-          // 本地模式：更新缓存的 games 列表
-          const games = wx.getStorageSync('games') || [];
-          const idx = games.findIndex((g: any) => g._id === gameId);
-          if (idx >= 0) {
-            games[idx] = { ...games[idx], billing: billRecord };
-          }
-          wx.setStorageSync('games', games);
-          return Promise.resolve();
-        })()
-      : db.collection('games').doc(gameId).update({
-          data: { billing: billRecord }
-        });
-
-    saveAction.then(() => {
+    if (isLocal) {
+      // 本地模式：更新缓存的 games 列表
+      const games = wx.getStorageSync('games') || [];
+      const idx = games.findIndex((g: any) => g._id === gameId);
+      if (idx >= 0) {
+        games[idx] = { ...games[idx], billing: billRecord };
+      }
+      wx.setStorageSync('games', games);
       this.setData({ billSaved: true });
-      wx.showToast({ title: '已保存到本次记录', icon: 'success' });
+      wx.showToast({ title: '已保存到本地', icon: 'success' });
       wx.removeStorageSync('billingGameData');
-    }).catch(() => {
-      wx.showToast({ title: '保存失败，请重试', icon: 'none' });
-    });
+    } else {
+      try {
+        await gameApi.update(gameId, { billing: billRecord } as any);
+        this.setData({ billSaved: true });
+        wx.showToast({ title: '已保存到本次记录', icon: 'success' });
+        wx.removeStorageSync('billingGameData');
+      } catch {
+        wx.showToast({ title: '保存失败，请重试', icon: 'none' });
+      }
+    }
   }
 });

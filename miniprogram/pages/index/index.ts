@@ -1,6 +1,7 @@
 // pages/index/index.ts
 import { PlayModeConfig } from '../../types/index';
 import { PLAY_MODES } from '../../utils/play-modes';
+import { gameApi } from '../../utils/api';
 
 Page({
   data: {
@@ -15,20 +16,18 @@ Page({
   },
 
   loadRecentGames() {
-    const db = wx.cloud.database();
-    db.collection('games')
-      .orderBy('createdAt', 'desc')
-      .limit(3)
-      .get()
-      .then(res => {
-        const games = (res.data as any[]).map(g => ({
+    gameApi.list(3)
+      .then(games => {
+        const formatted = games.map(g => ({
           ...g,
           timeShort: this.getTimeShort(g.createdAt),
           playModeName: this.getModeName(g.playMode)
         }));
+        // 同步缓存
+        wx.setStorageSync('recentGames', games);
         this.setData({
-          recentGames: games,
-          showEmpty: games.length === 0
+          recentGames: formatted,
+          showEmpty: formatted.length === 0
         });
       })
       .catch(() => {

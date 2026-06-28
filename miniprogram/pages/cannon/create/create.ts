@@ -2,12 +2,13 @@
 import { PlayModeConfig, PlayMode, PartnerPair } from '../../../types/index';
 import { PLAY_MODES } from '../../../utils/play-modes';
 import { getMatchPreview } from '../../../utils/match-engine';
+import { gameApi } from '../../../utils/api';
 
 /** 临时选手（建局时使用，非数据库Member） */
 interface Player {
   id: string;
   nickname: string;
-  gender: number; // 1=男 2=女
+  gender: number;
 }
 
 /** 固定搭模式下，一对搭档 */
@@ -19,42 +20,32 @@ interface PartnerPairData {
 
 Page({
   data: {
-    // 玩法
     playMode: 'cannon_rotation_8' as PlayMode,
     playModeConfig: null as PlayModeConfig | null,
 
-    // 表单
     gameName: '',
 
-    // 选手（普通模式：个人输入）
     players: [] as Player[],
     nextPlayerId: 1,
 
-    // 固定搭模式：搭档输入
     pairs: [] as PartnerPairData[],
     nextPairId: 1,
 
-    // 报名导入弹窗
     showImportModal: false,
     importText: '',
 
-    // 统计
     matchCountPerPlayer: 0,
     totalMatches: 0,
 
-    // 搭档统计（固定搭模式）
     pairCount: 0,
     expectedMatches: 0,
 
-    // 玩法说明
     playModeRules: [] as string[],
 
-    // 状态
     isReplay: false,
     replayGameId: '',
     canStart: false,
 
-    // 是否为固定搭模式（计算属性）
     isPartnerMode: false
   },
 
@@ -62,33 +53,26 @@ Page({
     const mode = options.mode as PlayMode;
     const replay = options.replay;
 
-    // 设置玩法
     const config = PLAY_MODES.find(m => m.mode === mode);
     if (config) {
       this.setData({ playMode: mode, playModeConfig: config, isPartnerMode: mode === 'blind_cannon' });
       if (mode === 'blind_cannon') {
-        // 固定搭模式：初始化 3 对
         this.initPairs(3);
       } else {
-        // 普通模式：初始化最少人数的空输入框
         this.initPlayers(config.minPlayers);
       }
-      // 生成玩法说明
       this.buildPlayModeRules(mode);
     }
 
-    // 生成默认比赛名
     const today = this.formatDate(new Date());
     this.setData({ gameName: `炮哥${today}局` });
 
-    // 一键重新开炮
     if (replay) {
       this.setData({ isReplay: true, replayGameId: replay });
       this.loadReplayGame(replay);
     }
   },
 
-  /** 初始化选手输入框（普通模式） */
   initPlayers(count: number) {
     const players: Player[] = [];
     for (let i = 0; i < count; i++) {
@@ -98,7 +82,6 @@ Page({
     this.checkCanStart();
   },
 
-  /** 初始化搭档对（固定搭模式） */
   initPairs(count: number) {
     const pairs: PartnerPairData[] = [];
     for (let i = 0; i < count; i++) {
@@ -108,7 +91,6 @@ Page({
     this.checkCanStart();
   },
 
-  /** 创建一对空搭档 */
   createEmptyPair(index: number): PartnerPairData {
     const baseId = `pair_${Date.now()}_${index}`;
     return {
@@ -118,12 +100,10 @@ Page({
     };
   },
 
-  /** 格式化日期 */
   formatDate(date: Date): string {
     return `${date.getMonth() + 1}${date.getDate().toString().padStart(2, '0')}`;
   },
 
-  /** 输入选手昵称（普通模式） */
   onPlayerInput(e: any) {
     const idx = e.currentTarget.dataset.index;
     const nickname = e.detail.value.trim();
@@ -132,7 +112,6 @@ Page({
     this.checkCanStart();
   },
 
-  /** 切换选手性别（普通模式） */
   onGenderToggle(e: any) {
     const idx = e.currentTarget.dataset.index;
     const player = this.data.players[idx];
@@ -141,16 +120,14 @@ Page({
     this.setData({ [`players[${idx}].gender`]: newGender });
   },
 
-  /** 输入搭档昵称（固定搭模式） */
   onPairInput(e: any) {
     const pairIdx = e.currentTarget.dataset.pairIndex;
-    const playerKey = e.currentTarget.dataset.playerKey as string; // 'player1' or 'player2'
+    const playerKey = e.currentTarget.dataset.playerKey as string;
     const nickname = e.detail.value.trim();
     this.setData({ [`pairs[${pairIdx}].${playerKey}.nickname`]: nickname });
     this.checkCanStart();
   },
 
-  /** 切换搭档性别（固定搭模式） */
   onPairGenderToggle(e: any) {
     const pairIdx = e.currentTarget.dataset.pairIndex;
     const playerKey = e.currentTarget.dataset.playerKey as string;
@@ -160,7 +137,6 @@ Page({
     this.setData({ [`pairs[${pairIdx}].${playerKey}.gender`]: newGender });
   },
 
-  /** 添加一个选手输入框（普通模式） */
   onAddPlayer() {
     const config = this.data.playModeConfig;
     if (!config || this.data.players.length >= config.maxPlayers) {
@@ -175,7 +151,6 @@ Page({
     this.checkCanStart();
   },
 
-  /** 移除选手（普通模式） */
   onRemovePlayer(e: any) {
     const idx = e.currentTarget.dataset.index;
     const config = this.data.playModeConfig;
@@ -189,7 +164,6 @@ Page({
     this.checkCanStart();
   },
 
-  /** 添加一对搭档（固定搭模式） */
   onAddPair() {
     const config = this.data.playModeConfig;
     if (!config) return;
@@ -206,7 +180,6 @@ Page({
     this.checkCanStart();
   },
 
-  /** 移除一对搭档（固定搭模式） */
   onRemovePair(e: any) {
     const idx = e.currentTarget.dataset.index;
     const pairCount = this.data.pairs.length;
@@ -220,17 +193,14 @@ Page({
     this.checkCanStart();
   },
 
-  /** 显示导入弹窗 */
   onShowImportModal() {
     this.setData({ showImportModal: true, importText: '' });
   },
 
-  /** 隐藏导入弹窗 */
   onHideImportModal() {
     this.setData({ showImportModal: false });
   },
 
-  /** 粘贴剪贴板 */
   async onPasteClipboard() {
     try {
       const res = await wx.getClipboardData();
@@ -240,17 +210,14 @@ Page({
     }
   },
 
-  /** 清空导入文本 */
   onClearImportText() {
     this.setData({ importText: '' });
   },
 
-  /** 导入文本变化 */
   onImportTextInput(e: any) {
     this.setData({ importText: e.detail.value });
   },
 
-  /** 解析报名文本，提取名字列表 */
   parseSignupNames(text: string): string[] {
     const names: string[] = [];
     if (!text.trim()) return names;
@@ -307,7 +274,7 @@ Page({
       if (name.length < 2 || name.length > 12) continue;
       if (stopWords.has(name)) continue;
       if (/^\d+$/.test(name)) continue;
-      if (/^[的是有了在和他这那我你她它就都也而]$/.test(name)) continue;
+      if (/^[的是有了在和他这我那你她它就都也而]$/.test(name)) continue;
 
       names.push(name);
     }
@@ -315,7 +282,6 @@ Page({
     return names;
   },
 
-  /** 导入选手（普通模式） */
   onImportPlayers() {
     if (this.data.isPartnerMode) {
       this.importToPairs();
@@ -324,7 +290,6 @@ Page({
     }
   },
 
-  /** 导入选手到普通模式 */
   importToPlayers() {
     const text = this.data.importText.trim();
     if (!text) {
@@ -398,7 +363,6 @@ Page({
     this.checkCanStart();
   },
 
-  /** 导入选手到固定搭模式 — 按名字顺序两两配对 */
   importToPairs() {
     const text = this.data.importText.trim();
     if (!text) {
@@ -422,11 +386,10 @@ Page({
       return;
     }
 
-    // 两两配对
     const pairs: PartnerPairData[] = [];
     for (let i = 0; i < names.length; i += 2) {
       const pairId = `pair_import_${i / 2}_${Date.now()}`;
-      if (i + 1 >= names.length) break; // 奇数人数忽略最后一人
+      if (i + 1 >= names.length) break;
       pairs.push({
         id: pairId,
         player1: { id: `${pairId}_p1`, nickname: names[i], gender: 1 },
@@ -445,19 +408,14 @@ Page({
     this.checkCanStart();
   },
 
-  /** 确认添加（兼容旧逻辑） */
   onConfirmImport() {
     this.onImportPlayers();
   },
 
-  /** 加载重赛的比赛数据 */
-  loadReplayGame(gameId: string) {
-    const db = wx.cloud.database();
-    db.collection('games').doc(gameId).get().then((res: any) => {
-      const game = res.data as any;
-      this.setData({
-        gameName: `${game.name}（复刻）`
-      });
+  async loadReplayGame(gameId: string) {
+    try {
+      const game = await gameApi.get(gameId) as any;
+      this.setData({ gameName: `${game.name}（复刻）` });
       if (game.playerDetails && Array.isArray(game.playerDetails)) {
         const players = game.playerDetails.map((p: any, i: number) => ({
           id: `replay_${i}`,
@@ -467,15 +425,13 @@ Page({
         this.setData({ players });
         this.checkCanStart();
       }
-    }).catch(() => {});
+    } catch {}
   },
 
-  /** 修改比赛名称 */
   onNameInput(e: any) {
     this.setData({ gameName: e.detail.value });
   },
 
-  /** 生成玩法说明 */
   buildPlayModeRules(mode: PlayMode) {
     const rules: string[] = [];
     switch (mode) {
@@ -497,7 +453,6 @@ Page({
     this.setData({ playModeRules: rules });
   },
 
-  /** 检查是否可以开始 */
   checkCanStart() {
     const config = this.data.playModeConfig;
     if (!config) {
@@ -512,7 +467,6 @@ Page({
     let expectedMatches = 0;
 
     if (this.data.isPartnerMode) {
-      // 固定搭模式：每对两人均需有昵称
       const pairs = this.data.pairs;
       pairCount = pairs.length;
       const allFilled = pairs.every(p =>
@@ -527,7 +481,6 @@ Page({
         expectedMatches = preview.totalMatches;
       }
     } else {
-      // 普通模式
       const players = this.data.players;
       const validCount = players.filter(p => p.nickname.trim()).length;
       canStart = validCount >= config.minPlayers && validCount <= config.maxPlayers;
@@ -541,7 +494,6 @@ Page({
     this.setData({ canStart, matchCountPerPlayer, totalMatches, pairCount, expectedMatches });
   },
 
-  /** 开炮！创建比赛并跳转对阵页 */
   onFire() {
     if (!this.data.canStart || !this.data.gameName.trim()) {
       wx.showToast({ title: '请完善比赛信息', icon: 'none' });
@@ -551,7 +503,6 @@ Page({
     let validPlayers: Player[];
 
     if (this.data.isPartnerMode) {
-      // 固定搭模式：从 pairs 扁平化为 player 数组
       validPlayers = this.data.pairs.flatMap(p => [
         { id: p.player1.id, nickname: p.player1.nickname.trim(), gender: p.player1.gender },
         { id: p.player2.id, nickname: p.player2.nickname.trim(), gender: p.player2.gender }
